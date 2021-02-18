@@ -1,5 +1,13 @@
+{the Lusztig map goes from triples (O^v,x,xi) to W^
+ this file implements an algorithm (conjectural)
+ to implement this when xi=1
+ the set obtained for fixed O^v, running over x,
+ is a Lusztig (left) cell
+}
+<coherent_characters.at
 <isomorphism_W.at
-
+<truncated_induction.at
+<springer_tables_reductive.at
 
 {sigma_L (L stands for "Lusztig")
 sigma_L(O^v,x) is a of a representation of W(G)
@@ -51,17 +59,17 @@ set sigma_L_verbose=false
  M_v: pseudo-Levi in which exp(2\pi iy) is central
   (this isn't really needed but is helpful information)
  H_M_v: ss element for orbit of M_v
- y: x=exp(2\pi iy) 
+ y: x=exp(2\pi iy)
  note that L_v depends on y
 }
-set sigma_L(RootDatum G,CharacterTable ct_G,SpringerTable st_L_v,ComplexNilpotent O_v,RootDatum M_v,vec H_M_v,ratvec y)=int:
+set sigma_L(RootDatum G,CharacterTable ct_G,SpringerTable st_G_v,ComplexNilpotent O_v,RootDatum M_v,vec H_M_v,ratvec y)=int:
 let ()=if sigma_L_verbose then
    prints("Computing sigma_L: ",new_line,
-   "G=", G, "st_L_v: ",new_line, st_L_v.root_datum, new_line,"M_v=", M_v, new_line, "H_M_v=",H_M_v,new_line,"y=", y) fi
+   "G=", G, "st_G_v: ",new_line, st_G_v.root_datum, new_line,"M_v=", M_v, new_line, "H_M_v=",H_M_v,new_line,"y=", y) fi
 in if y.is_integer then  {L_v=G_v, L=G, don't need induction}
  let ()=if sigma_L_verbose then prints("y is integer, no induction")  fi then
- sigma_v=st_L_v.ct.characters[st_L_v.springer(O_v)] then
- sigma= exchange_long_short(ct_G,st_L_v.ct.tensor_sign(sigma_v)) in
+ sigma_v=st_G_v.ct.characters[st_G_v.springer(O_v)] then
+ sigma= exchange_long_short(ct_G,st_G_v.ct.tensor_sign(sigma_v)) in
  ct_G.character_index(sigma)
 else  {need induction; compute L, sigma_L, truncated_induce}
  let ()=if sigma_L_verbose then prints("need induction: ")  fi in
@@ -98,22 +106,23 @@ else  {need induction; compute L, sigma_L, truncated_induce}
 fi
 
 {run over all ratvecs from component_representatives(orbit)}
-set sigma_L(RootDatum G,CharacterTable ct_G,SpringerTable st_G_v,ComplexNilpotent O_v)=[int]:
+set lusztig_cell(RootDatum G,CharacterTable ct_G,SpringerTable st_G_v,ComplexNilpotent O_v)=[int]:
 prints("sigma_L for: ", O_v,"  ", O_v.diagram,new_line, " st_G_v:",st_G_v.root_datum);
 for (M_v,H_M_v,y) in component_representatives_plus(O_v) do
  let ()=if sigma_L_verbose then prints(new_line,"computing sigma_L for M_v=", M_v, new_line,"H_M_v=",H_M_v,new_line, "y=", y)  fi in
-    let ()=if sigma_L_verbose then prints("calling sigma_L_even_1(x):", new_line,"G: ", G, new_line,
+    let ()=if sigma_L_verbose then prints("calling sigma_L(x):", new_line,"G: ", G, new_line,
    "st:", st_G_v.root_datum, new_line,"M_v: ", M_v, new_line, "H_M_v", H_M_v, new_line, "y: ", y) fi in 
  sigma_L(G,ct_G,st_G_v,O_v,M_v,H_M_v,y) od
 
+set lusztig_cell(RootDatum G,ComplexNilpotent O_v)=[int]:lusztig_cell(G,G.character_table,O_v.root_datum.springer_table,O_v)
+set lusztig_cell(RootDatum G,ComplexNilpotent O_v)=[int]:lusztig_cell(G,G.character_table,O_v.root_datum.springer_table,O_v)
+set lusztig_cell(RootDatum G,ComplexNilpotent O_v)=[int]:lusztig_cell(G,G.character_table,O_v.root_datum.springer_table,O_v)
+set lusztig_cell(RootDatum G,CharacterTable ct_G,ComplexNilpotent O_v)=[int]:lusztig_cell(G,ct_G,G.dual.springer_table,O_v)
+set lusztig_cells(RootDatum G,[ComplexNilpotent] dual_orbits)=[[int]]:
+ for orbit in dual_orbits do lusztig_cell(G,G.character_table,orbit.root_datum.springer_table,orbit) od
+set lusztig_cells(RootDatum G)=[[int]]:lusztig_cells(G,G.dual_orbits)
 
-set sigma_L(RootDatum G,ComplexNilpotent O_v)=[int]:sigma_L(G,G.character_table,O_v.root_datum.springer_table,O_v)
-set sigma_L(RootDatum G,ComplexNilpotent O_v)=[int]:sigma_L(G,G.character_table,O_v.root_datum.springer_table,O_v)
-set sigma_L(RootDatum G,[ComplexNilpotent] dual_orbits)=[[int]]:
- for orbit in dual_orbits do sigma_L(G,G.character_table,orbit.root_datum.springer_table,orbit) od
-set sigma_L(RootDatum G)=[[int]]:sigma_L(G,G.dual_orbits)
-
-set show_sigma_L(RootDatum G,CharacterTable ct_G,SpringerTable st_G_v,[ComplexNilpotent] dual_orbits)=void:
+set show_lusztig_cells(RootDatum G,CharacterTable ct_G,SpringerTable st_G_v,[ComplexNilpotent] dual_orbits)=void:
 prints("G=", G.nice_format, new_line, "#orbits: ", #dual_orbits);
 tabulate(
 ["O","dim","i","rd_int","M","H_M","v","L","sigma","dim","deg","char"]#
@@ -143,10 +152,35 @@ tabulate(
   od  {/for i:#data}
  od {for O_v})
 
-set show_sigma_L(RootDatum G,CharacterTable ct_G,SpringerTable st_G_v,ComplexNilpotent dual_orbit)=
- show_sigma_L(G,ct_G,st_G_v,[dual_orbit])
-set show_sigma_L(RootDatum G,CharacterTable ct)=void:show_sigma_L(G,ct,G.dual.springer_table,G.dual_orbits)
-set show_sigma_L(RootDatum G)=void:show_sigma_L(G,G.character_table,G.dual.springer_table,G.dual_orbits)
+set show_lusztig_cell(RootDatum G,CharacterTable ct_G,SpringerTable st_G_v,ComplexNilpotent dual_orbit)=void:
+ show_lusztig_cells(G,ct_G,st_G_v,[dual_orbit])
+set show_lusztig_cell(RootDatum G, CharacterTable ct_G,ComplexNilpotent O_v)=void:show_lusztig_cell(G,ct_G,G.dual.springer_table,O_v)
+set show_lusztig_cell(RootDatum G, ComplexNilpotent O_v)=void:show_lusztig_cell(G,G.character_table,G.dual.springer_table,O_v)
+set show_lusztig_cell(ComplexNilpotent O_v)=void:show_lusztig_cell(O_v.root_datum.dual,O_v)
 
-set init(RootDatum G)=(G.character_table,G.dual.springer_table,G.dual.orbits)
+set show_lusztig_cells(RootDatum G,CharacterTable ct)=void:show_lusztig_cells(G,ct,G.dual.springer_table,G.dual_orbits)
+set show_lusztig_cells(RootDatum G)=void:show_lusztig_cells(G,G.character_table,G.dual.springer_table,G.dual_orbits)
 
+
+set init(RootDatum G)=(CharacterTable,SpringerTable,[ComplexNilpotent]):(G.character_table,G.dual.springer_table,G.dual.orbits)
+
+set f(RealForm G,CharacterTable ct_G,[Param] parameters,ComplexNilpotent O_v)=
+let coh=character_coherent(ct_G,parameters) then
+lusztig_cell=lusztig_cell(G,ct_G,O_v)
+then lusztig_cell_character=sum(for i in lusztig_cell do ct_G.characters[i] od) in
+ct_G.inner_product(coh,lusztig_cell_character)
+
+set g(RealForm G,CharacterTable ct_G,[Param] parameters,[ComplexNilpotent] orbits)=
+let sizes=for orbit in orbits do f(G,ct_G,parameters,orbit) od in
+tabulate(["orbit","#reps"]#
+ for orbit@i in orbits do [orbit.diagram.to_string,sizes[i].to_string] od)
+
+set dual_special_orbits(RealForm G,SpringerTable st_G_v)=
+##for a in G.dual_orbits do if st_G_v.is_special(a) then [a] else [] fi od
+
+set dual_special_orbits(RealForm G)=dual_special_orbits(G,G.dual.springer_table)
+
+set g(RealForm G,CharacterTable ct_G,[Param] parameters)=g(G,ct_G,parameters,G.dual_special_orbits)
+
+set g(RealForm G)=
+g(G,G.character_table,all_parameters_gamma(G,rho(G)),G.dual_special_orbits)
