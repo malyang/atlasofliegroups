@@ -23,6 +23,10 @@ set equal([[int]] a,[[int]] b)=bool:
 if #a != #b then false else
 all(for i:#a do a[i]=b[i] od) fi
 
+set orbit_index(SpringerTable st,ComplexNilpotent orbit)=int:
+let diagram=orbit.diagram_normalized in 
+first(for O in st.orbits do equal(O.diagram_normalized,diagram) od)
+
 {ComplexNilpotent given by diagram}
 set orbit_by_diagram([ComplexNilpotent] orbits,[vec] diagram)=ComplexNilpotent:
 let index=first(for i:#orbits do equal(orbits[i].diagram_normalized,diagram) od) in orbits[index]
@@ -261,6 +265,23 @@ for orbit in st.orbits do
 let j=st.springer(orbit) in
 [orbit.diagram.to_string+st.special_star(orbit),
 orbit.dim_nilpotent.to_string,
+j.to_string,
+st.ct.dimension(j).to_string,
+st.ct.degree(j).to_string,
+if #st.fake_degrees>0 then st.fake_degrees[j].to_string else "" fi,
+ st.ct.characters[j].to_string] od)
+
+set show_long(SpringerTable st)=void:
+tabulate(
+["#orbit","diagram","dim","dual","dual-dim","rep#","dim","deg", "fdeg","char"]#
+for orbit@i in st.orbits do
+let  dual_orbit=st.dual_map(orbit) then
+j=st.springer(orbit) in
+[i.to_string,
+orbit.diagram.to_string+st.special_star(orbit),
+orbit.dim_nilpotent.to_string,
+dual_orbit.diagram.to_string,
+dual_orbit.dim_nilpotent.to_string,
 j.to_string,
 st.ct.dimension(j).to_string,
 st.ct.degree(j).to_string,
