@@ -142,6 +142,17 @@ KLIndex KL_table::KL_pol_index(BlockElt x, BlockElt y) const
   return kl_col[inx];
 }
 
+// The same, but when |d_KL[y]| is not yet ready, so take polynomial from |col|
+KLPol KL_table::lookup(BlockElt x, BlockElt y,
+		       const std::vector<KLPol>& col) const
+{
+  unsigned int inx = prim_index(x,descent_set(y)); // can handle |x==UndefBlock|
+
+  if (inx>=col.size()) // l(x)>=l(y), includes case x==-1: no primitivization
+    return inx==self_index(y) ? One : Zero;
+  return col[inx];
+}
+
 /*
   Return $\mu(x,y)$ if $x<y$, and $0$ otherwise (no effort to symmetrise here).
   This function is not used internally, so we are sure all tables are computed.
@@ -342,8 +353,7 @@ inline BlockEltPair KL_table::inverse_Cayley(weyl::Generator s, BlockElt y) cons
 // private manipulators
 
 // Fill the column for |y| in the KL-table, all previous ones having been filled
-void KL_table::fill_KL_column
-  (std::vector<KLPol>& klv, BlockElt y, KL_hash_Table& hash)
+void KL_table::fill_KL_column(std::vector<KLPol>& klv, BlockElt y)
 {
   prepare_prim_index(descent_set(y)); // so looking up |KL_pol(x,y)| will be OK
 
@@ -351,18 +361,21 @@ void KL_table::fill_KL_column
   if (s<rank())  // a direct recursion was found, use it for |y|, for all |x|
   {
     recursion_column(y,s,klv); // compute $P_{x,y}$ for extremal |x| for |y|
-    complete_primitives(klv,y,hash); // add primitive |x|s; store in |d_KL|
+    complete_primitives(klv,y); // add primitive |x|s
   }
   else // we must use an approach that distinguishes on |x| values
-    new_recursion_column(klv,y,hash); // compute and install column
+    new_recursion_column(klv,y);
 } // |KL_table::fill_KL_column|
 
 /*
-  Put into |klv[x]| the the right-hand sides of the recursion formulae for the
-  elements |x=e[i]| with |y|, corresponding to the descent |s| for |y|. Here |e|
-  contains the block elements extremal for |y| (so in particular their length is
-  less than that of |y| and |s| is a descent for all of them), and |s| is either
-  a complex, or a real type I descent for |y|. The formula takes the form
+  When calling |recursion_column|, |s| is either a complex, or a real type I
+  descent for |y|.
+
+  The call replaces |klv| by a vector with entries for extremal elements |x| for
+  |y|, (whose length is less than that of |y| and |s| is a descent for |x|).
+
+  For each such |x|, the value stored is the right-hand side of the recursion
+  formula, which takes the form
 
     P_{x,y} = (c_s.c_{y'})-part - correction term
 
@@ -536,39 +549,38 @@ void KL_table::mu_correction(const BlockEltList& extremals,
    of that length as well with nonzero mu), and are primitive only in the real
    type 2 case; we must treat them outside the loop over primitive elements.
  */
-void KL_table::complete_primitives(const std::vector<KLPol>& klv, BlockElt y,
-				   KL_hash_Table& hash)
+void KL_table::complete_primitives(std::vector<KLPol>& klv, BlockElt y)
 {
-  KL_column& KL = d_KL[y]; // the column that we must write to
-  KL.resize(col_size(y)); // create slots for all pertinent elements |x|
-
+  std::vector<KLPol> out(col_size(y),Zero); // for polynomials at all primitives
   Mu_list mu_pairs; // those |x| with |mu(x,y)>0|
   const unsigned int ly = length(y);
   const RankFlags desc_y = descent_set(y);
 
-  auto KL_it = KL.rbegin(); // prepare for writing |KL| backwards
+  auto KL_it = out.rbegin(); // prepare for writing |out| backwards
   auto it = klv.rbegin(); // prepare for reading |klv| backwards
   // traverse primitives for |y| of length |y| less than |ly| backwards
   for(BlockElt x=length_floor(y); prim_back_up(x,desc_y); ++KL_it)
+  {
+    KLPol& Pxy = *KL_it; // the polynomial that will be determined here
     if (is_extremal(x,desc_y))
     { // extremal element for |y|; use polynomial from vector passed to us
-      const KLPol& Pxy = *it++;
-      *KL_it = hash.match(Pxy);
-      unsigned int lx = length(x);
-      if (not Pxy.isZero() and ly==lx+2*Pxy.degree()+1)
-	mu_pairs.emplace_front(x,MuCoeff(Pxy[Pxy.degree()]));
+      Pxy = std::move(*it++); // move polynomial from |klv| to |out|
+      if (not Pxy.isZero())
+	if (ly==length(x)+2*Pxy.degree()+1) // implies parities |lx|, |ly| differ
+	  mu_pairs.emplace_front(x,MuCoeff(Pxy[Pxy.degree()]));
     }
-    else // must insert a polynomial for primitive non-extremal |x|
+    else // insert a polynomial for primitive non-extremal |x|
     {
       unsigned int s = ascent_descent(x,y);
       assert(descent_value(s,x)==DescentStatus::ImaginaryTypeII);
       BlockEltPair xs = cayley(s,x);
-      KLPol Pxy = KL_pol(xs.first,y); // look up P_{x',y} in current row, above
-      Pxy.safeAdd(KL_pol(xs.second,y)); // current point, and P_{x'',y} as well
-      *KL_it = hash.match(Pxy); // add poly at primitive non-extremal x
+      Pxy = lookup(xs.first,y,out);
+      Pxy.safeAdd(lookup(xs.second,y,out));
     }
-  assert(KL_it==KL.rend());
+  }
+  assert(KL_it==out.rend());
   assert(it==klv.rend());
+  klv = std::move(out); // finally move |out| in place of now exhausted |klv|
 
   Mu_list downs;
   auto ds = down_set(block(),y);
@@ -579,13 +591,14 @@ void KL_table::complete_primitives(const std::vector<KLPol>& klv, BlockElt y,
   // some elements in |mu_pairs| may have same length as |downs|: merge is needed
   mu_pairs.merge(std::move(downs)); // need not call |unique|: sets are disjoint
 
-  // commit
+  // commit |mu_pairs| to |d_mu[y]|
+  d_mu[y].reserve(mu_pairs.size());
   d_mu[y].assign(mu_pairs.wcbegin(),mu_pairs.wcend()); // convert to vector
 } // |KL_table::complete_primitives|
 
 /*
   Compute polynomials $P_{x,y}$ for all $x$ of length less than and primitive
-  for |y|, look them up and return a vector of their indices in |storage_pool|.
+  for |y|, and store them in |cur_col|.
 
   These KL polynomials are computed by a recursion formula designed for those
   elements |y| for which the direct recursion does not apply.
@@ -629,8 +642,7 @@ void KL_table::complete_primitives(const std::vector<KLPol>& klv, BlockElt y,
   This code gets executed for |y| that are of minimal length, in which case
   it only contributes $P_{y,y}=1$; the |while| loop will be executed 0 times.
 */
-void KL_table::new_recursion_column
-  (std::vector<KLPol>& cur_col, BlockElt y, KL_hash_Table& hash)
+void KL_table::new_recursion_column(std::vector<KLPol>& cur_col, BlockElt y)
 {
   const unsigned int l_y = length(y);
   const auto desc_y = descent_set(y);
@@ -762,18 +774,10 @@ void KL_table::new_recursion_column
 	  mu_pairs.emplace_back(x,Pxy[Pxy.degree()]);
       } // |if (endgame_pair(x,y)) |
       else // |first_endgame_pair| found nothing
-	assert(*col_it==Zero); // just check unchanged since initialised
-    } // end of no NiceAscent case
+	assert(Pxy.isZero()); // just check unchanged since initialised
+    } // end of no |NiceAscent| case
   } // for(BlockElt x = length_less(l_y); prim_back_up(x,desc_y); --col_it)|
   assert(col_it==cur_col.begin());
-
-  { // transcribe polynomials from |cur_col| to |d_KL[y]| and clean up
-    auto& col_y = d_KL[y];
-    col_y.reserve(height);
-    for (unsigned int i=0; i<height; ++i)
-      col_y.push_back(hash.match(cur_col[i]));
-    cur_col.clear();
-  }
 
   { // shuffle |mu_pairs| into increasing order
     Mu_list downs; // set apart initial part which is increasing
@@ -847,8 +851,14 @@ void KL_table::silent_fill(BlockElt limit)
     // fill the lists
     for (auto it = d_holes.begin(); it() and *it<limit; ++it)
     {
-      fill_KL_column(klv,*it,hash);
-      d_holes.remove(*it);
+      BlockElt y=*it;
+      fill_KL_column(klv,y);
+
+      // commit
+      d_KL[y].reserve(klv.size());
+      for (const auto& P: klv)
+	d_KL[y].push_back(hash.match(P));
+      d_holes.remove(y);
     }
     // after all columns are done the hash table is freed, only the store remains
   }
@@ -887,13 +897,18 @@ void KL_table::verbose_fill(BlockElt limit)
       BlockElt y_start = l==minLength ? first_hole() : length_less(l);
       BlockElt y_limit = l<maxLength ? length_less(l+1) : limit;
       for (BlockElt y=y_start; y<y_limit; ++y)
-      {
-	std::cerr << y << "\r";
+	if (d_holes.isMember(y))
+	{
+	  std::cerr << y << "\r";
 
-	fill_KL_column(klv,y,hash);
-	kl_size += d_KL[y].size();
-	d_holes.remove(y);
-      }
+	  fill_KL_column(klv,y);
+	  // commit
+	  d_KL[y].reserve(klv.size());
+	  for (const auto P: klv)
+	    d_KL[y].push_back(hash.match(P));
+	  kl_size += d_KL[y].size();
+	  d_holes.remove(y);
+	}
 
       // now length |l| is completed
       size_t p_capacity // currently used memory for polynomials storage

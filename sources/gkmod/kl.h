@@ -149,20 +149,22 @@ class KL_table
     first_endgame_pair(BlockElt x, BlockElt y) const;
   BlockEltPair inverse_Cayley(weyl::Generator s, BlockElt y) const;
 
+  // like |KL_pol(x,y)|, but take value from |col|, when |d_KL[y]| not yet ready
+  KLPol lookup(BlockElt x, BlockElt y, const std::vector<KLPol>& col) const;
+
   // manipulators
   void silent_fill(BlockElt limit); // called by public |fill| when not verbose
   void verbose_fill(BlockElt limit); // called by public |fill| when verbose
 
-  void fill_KL_column(std::vector<KLPol>& klv, BlockElt y, KL_hash_Table& hash);
+  // fill column for |y| in the KL-table, all previous ones having been filled
+  void fill_KL_column(std::vector<KLPol>& klv, BlockElt y);
   void recursion_column(BlockElt y, weyl::Generator s,
 			std::vector<KLPol>& klv);
   void mu_correction(const BlockEltList& extremals,
 		     RankFlags desc_y, BlockElt sy, weyl::Generator s,
 		     std::vector<KLPol>& klv);
-  void complete_primitives(const std::vector<KLPol>& klv, BlockElt y,
-			   KL_hash_Table& hash);
-  void new_recursion_column(std::vector<KLPol>& klv, BlockElt y,
-			    KL_hash_Table& hash);
+  void complete_primitives(std::vector<KLPol>& klv, BlockElt y);
+  void new_recursion_column(std::vector<KLPol>& klv, BlockElt y);
   KLPol mu_new_formula
     (BlockElt x, BlockElt y, weyl::Generator s, const Mu_list& muy);
 
