@@ -839,33 +839,41 @@ KLPol KL_table::mu_new_formula
 
 void KL_table::silent_fill(BlockElt limit)
 {
-  std::vector<KLPol> klv(block().size()+1,Zero); // enough working storage
   const auto hash_object = polynomial_hash_table();
   auto& hash = hash_object.ref;
   try
   {
+    const unsigned min_length = length(first_hole());
+    const unsigned max_length = length(limit<=size() ? limit-1 : size()-1);
     // fill the lists
-    for (auto it = d_holes.begin(); it() and *it<limit; ++it)
+    for (unsigned l=min_length; l<=max_length; ++l)
     {
-      BlockElt y=*it;
-      fill_KL_column(klv,y);
+      sl_list<BlockElt> ys;
+      BlockElt y_start = l==min_length ? first_hole() : length_less(l);
+      BlockElt y_limit = l<max_length ? length_less(l+1) : limit;
+      for (BlockElt y=y_start; y<y_limit; ++y)
+	if (d_holes.isMember(y))
+	  ys.push_back(y);
 
-      // commit
-      d_KL[y].reserve(col_size(y));
-      for (unsigned i=0; i<col_size(y); ++i)
+      for (BlockElt y:ys)
       {
-	d_KL[y].push_back(hash.match(klv[i]));
-	klv[i] = Zero; // clean up
-      }
-      d_holes.remove(y);
-    }
+	// due to |primitivize|, working vector needs full block size plus one
+	std::vector<KLPol> klv(block().size()+1,Zero); // full column
+	fill_KL_column(klv,y);
+	// commit
+	d_KL[y].reserve(col_size(y));
+	for (unsigned i=0; i<col_size(y); ++i)
+	  d_KL[y].push_back(hash.match(klv[i]));
+	d_holes.remove(y);
+      } // |for y|
+    } // |for(l)|
     // after all columns are done the hash table is freed, only the store remains
   }
   catch (error::NumericOverflow& )
   { // identify and relabel error so that atlas may catch it
     throw std::runtime_error("Numeric overflow in KL computations");
   }
-}
+} // |KL_table::silent_fill|
 
 // Fill the existing |KL_table| object while printing progress reports
 void KL_table::verbose_fill(BlockElt limit)
@@ -875,6 +883,7 @@ void KL_table::verbose_fill(BlockElt limit)
   const auto hash_object = polynomial_hash_table();
   auto& hash = hash_object.ref;
 
+  // we tested that |first_hole()<limit| before coming here
   size_t minLength = length(first_hole()); // length of first new |y|
   size_t maxLength = length(limit<=size() ? limit-1 : size()-1);
 
