@@ -854,43 +854,62 @@ void KL_table::silent_fill(BlockElt limit)
 	if (d_holes.isMember(y))
 	  ys.push_back(y);
 
-      struct worker
-      { KL_table& tab;
-	std::vector<KLPol> klv; // working vector, at end holds thread result
-	BlockElt y;
-	std::thread t;
+      if (ys.size()<4) // don't bother splitting into very few threads
+	for (BlockElt y:ys)
+	{
+	  // due to |primitivize|, working vector needs full block size plus one
+	  std::vector<KLPol> klv(block().size()+1,Zero); // full column
 
-	worker(KL_table& parent, BlockElt our_y)
-	  : tab(parent)
-	  , klv(tab.size()+1,Zero) // |primitivize| needs full block size + 1
-	  , y(our_y)
-	  , t([this]() { tab.fill_KL_column(klv,y); })
-	{}
-      };
+	  prepare_prim_index(descent_set(y)); // before looking up |KL_pol(x,y)|
+	  fill_KL_column(klv,y);
+	  // commit
+	  d_KL[y].reserve(col_size(y));
+	  for (unsigned i=0; i<col_size(y); ++i)
+	    d_KL[y].push_back(hash.match(klv[i]));
 
-      std::vector<worker> threads; threads.reserve(ys.size());
-      for (BlockElt y:ys)
-      { // since |prepare_prim_index| has side effect, keep it outside thread
-	prepare_prim_index(descent_set(y)); // before looking up |KL_pol(x,y)|
-	threads.emplace_back(*this,y); // start threads in parallel
-      }
-
-       // wait for completion of all threads
-      for (auto& thr: threads)
-	thr.t.join();
-
-      // now reap completed threads sequentially
-      for (const auto& thr: threads)
+	  d_holes.remove(y);
+	} // |for y|
+      else
       {
-	// commit
-	BlockElt y = thr.y;
-	d_KL[y].reserve(col_size(y));
-	for (unsigned i=0; i<col_size(y); ++i)
-	  d_KL[y].push_back(hash.match(thr.klv[i]));
+	struct worker
+	{ KL_table& tab;
+	  std::vector<KLPol> klv; // working vector, at end holds thread result
+	  BlockElt y;
+	  std::thread t;
 
-	d_holes.remove(y);
-      } // |for(const auto& thr:threads)|
+	  worker(KL_table& parent, BlockElt our_y)
+	    : tab(parent)
+	    , klv(tab.size()+1,Zero) // |primitivize| needs full block size + 1
+	    , y(our_y)
+	    , t([this]() { tab.fill_KL_column(klv,y); })
+	  {}
+	};
+
+	std::vector<worker> threads; threads.reserve(ys.size());
+	for (BlockElt y:ys)
+	{ // since |prepare_prim_index| has side effect, keep it outside thread
+	  prepare_prim_index(descent_set(y)); // before looking up |KL_pol(x,y)|
+	  threads.emplace_back(*this,y); // start threads in parallel
+	}
+
+	// wait for completion of all threads
+	for (auto& thr: threads)
+	  thr.t.join();
+
+	// now reap completed threads sequentially
+	for (const auto& thr: threads)
+	{
+	  // commit
+	  BlockElt y = thr.y;
+	  d_KL[y].reserve(col_size(y));
+	  for (unsigned i=0; i<col_size(y); ++i)
+	    d_KL[y].push_back(hash.match(thr.klv[i]));
+
+	  d_holes.remove(y);
+	} // |for(const auto& thr:threads)|
+      } // |else|
     } // |for(l)|
+
     // after all columns are done the hash table is freed, only the store remains
   }
   catch (error::NumericOverflow& )
