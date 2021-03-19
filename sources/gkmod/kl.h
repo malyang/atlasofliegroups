@@ -156,7 +156,12 @@ class KL_table
   BlockEltPair inverse_Cayley(weyl::Generator s, BlockElt y) const;
 
   // like |KL_pol(x,y)|, but take value from |col|, when |d_KL[y]| not yet ready
-  KLPol lookup(BlockElt x, BlockElt y, const std::vector<KLPol>& col) const;
+  // this assumes either |x| primitive for |y|, or |col| has size one more than
+  // that of the block, with entries |One| at |self_index(y)| and |Zero| beyond
+  KLPol lookup(BlockElt x, RankFlags desc_y, const std::vector<KLPol>& col)
+    const { return col[prim_index(x,desc_y)]; }
+  KLPol& locate(BlockElt x, RankFlags desc_y, std::vector<KLPol>& col) const
+    { return col[prim_index(x,desc_y)]; }
 
   // manipulators
   void silent_fill(BlockElt limit); // called by public |fill| when not verbose
