@@ -356,6 +356,8 @@ inline BlockEltPair KL_table::inverse_Cayley(weyl::Generator s, BlockElt y) cons
 // Fill the column for |y| in the KL-table, all previous ones having been filled
 void KL_table::fill_KL_column(std::vector<KLPol>& klv, BlockElt y)
 {
+  klv[self_index(y)]=One; // everything above will remain |Zero|
+
   weyl::Generator s = first_direct_recursion(y);
   if (s<rank())  // a direct recursion was found, use it for |y|, for all |x|
   {
@@ -364,14 +366,16 @@ void KL_table::fill_KL_column(std::vector<KLPol>& klv, BlockElt y)
   }
   else // we must use an approach that distinguishes on |x| values
     new_recursion_column(klv,y);
+
+  klv[self_index(y)] = Zero; // clean up
 } // |KL_table::fill_KL_column|
 
 /*
   When calling |recursion_column|, |s| is either a complex, or a real type I
   descent for |y|.
 
-  The call replaces |klv| by a vector with entries for extremal elements |x| for
-  |y|, (whose length is less than that of |y| and |s| is a descent for |x|).
+  The call stores into |klv| entries for extremal elements |x| for |y|
+  (whose length is less than that of |y| and |s| is a descent for |x|).
 
   For each such |x|, the value stored is the right-hand side of the recursion
   formula, which takes the form
@@ -388,8 +392,6 @@ void KL_table::fill_KL_column(std::vector<KLPol>& klv, BlockElt y)
 void KL_table::recursion_column (BlockElt y,weyl::Generator s,
 				 std::vector<KLPol>& klv)
 {
-  klv[self_index(y)]=One; // everything above will remain |Zero|
-
   const RankFlags desc_y = descent_set(y);
   auto KL_y = [this,&klv,desc_y] (BlockElt x) -> KLPol&
     { return klv[prim_index(x,desc_y)]; };
@@ -405,10 +407,11 @@ void KL_table::recursion_column (BlockElt y,weyl::Generator s,
       extremals.push_back(x);
 
 
-  // while more natural to do |x| descending, forward loop avoids |std:reverse|
-  for (BlockElt x : extremals)
-  { // now $s$ is descent for $x$
-    KLPol& Pxy=KL_y(x);
+  // reversal in the following loop is not essential, but a bit more natural
+  for (auto it=extremals.crbegin(); it!=extremals.crend(); ++it)
+  { // now |x| is extremal for $y$, so $s$ is descent for $x$
+    BlockElt x =*it;
+    KLPol& Pxy = KL_y(x);
     switch (descent_value(s,x))
     {
     case DescentStatus::ImaginaryCompact:
@@ -444,13 +447,13 @@ void KL_table::recursion_column (BlockElt y,weyl::Generator s,
       break;
     default: assert(false); // this cannot happen
     }
-    // for now |Pxy.degree()| might be one notch too high, which will be
-    // corrected in |mu_correction|; also |assert| there are based on this one
+    /* |Pxy.degree()| might still be one notch too high, which will be corrected
+       in |mu_correction|; also, the |assert|s there are based on this one: */
     assert(Pxy.isZero() or 2*Pxy.degree()<l(y,x) or
 	   (2*Pxy.degree()==l(y,x) and
 	    Pxy[Pxy.degree()]==mu(x,sy)
 	    ));
-  } // |for (i=e.size()-->0)|
+  } // |for (BlockElt x : extremals)| (reversed)
 
   // now subtract mu-corrections from all of |klv|
   mu_correction(extremals,desc_y,sy,s,klv);
@@ -461,29 +464,29 @@ void KL_table::recursion_column (BlockElt y,weyl::Generator s,
   Subtract from all polynomials in |klv| the correcting terms in the
   K-L recursion.
 
-  When we call |mu_correction|, the polynomial |klv[x]| already contains, for
-  all $x$ that are extremal for |y| (the members of |e|), the terms in $P_{x,y}$
-  corresponding to $c_s.c_{y'}$, where |y'| is an |s| descent of |y| as before.
-  The tables |d_KL| and |d_mu| have been filled in for elements of length < l(y).
+  When we call |mu_correction|, the polynomial |klv[i]| already contains, for
+  all |i| and with |x==extremals[i]|, the terms in $P_{x,y}$ corresponding to
+  $c_s.c_{y'}$, where |y'| is an |s| descent of |y| as before. The tables |d_KL|
+  and |d_mu| have been filled in for elements of length lees than |l(y)|.
 
   The recursion formula is of the form:
   $$
     lhs = c_s.c_{y'} - \sum_{z} mu(z,y')c_z
   $$
   where $y'$ is the |s|-descent of |y| passed as argument |sy|, with the sum
-  over |z| runing over the elements $< y'$ such that |s| is a descent for |z|.
-  (Here $lhs$ stands for $c_y$ when |s| is a complex descent or real type I for
-  |y|, and for $c_{y}+c_{s.y}$ when |s| is real type II; however it plays no
-  part in this function that only subtracts $\mu$-terms.)
+  over |z| runing over the elements Bruhat below $y'$ such that |s| is a descent
+  for |z|. (Here $lhs$ stands for $c_y$ when |s| is a complex descent or real
+  type I for |y|, and for $c_{y}+c_{s.y}$ when |s| is real type II; however it
+  plays no part in this function that only subtracts $\mu$-terms.)
 
-  We construct a loopfirst over those |z| for which $\mu(z,y')$ is nonzero
-  (which implies $z<y'$) and for which |s| is a descent, before traversing |e|
-  for the values of |x| for which |klv[x]| needs correction. This allows
-  fetching $\mu(z,sy)$ only once, and terminating each inner loop once |x|
-  becomes too large to produce a non-zero $P_{x,z}$. (In fact we stop once
-  $l(x)=l(z)$, and separately consider the possibility $x=z$ with $P_{x,z}=1$.)
-  Either direction of the loop on $z$ would work, but taking it decreasing is
-  more natural.
+  We construct a loop first over those |z| for which $\mu(z,y')$ is nonzero
+  (which implies $z<y'$) and for which |s| is a descent, before traversing
+  |extremals| for the indices of |i| for which |klv[i]| needs correction. This
+  way of organising the loops allows fetching $\mu(z,sy)$ only once, and
+  terminating each inner loop once |x| becomes too large to produce a non-zero
+  $P_{x,z}$. (In fact we stop once $l(x)=l(z)$, and separately consider the
+  possibility $x=z$ with $P_{x,z}=1$.) Either direction of the outer loop on $z$
+  would work, but taking it decreasing is more natural.
  */
 void KL_table::mu_correction(const BlockEltList& extremals,
 			     RankFlags desc_y, BlockElt sy, weyl::Generator s,
@@ -495,25 +498,26 @@ void KL_table::mu_correction(const BlockEltList& extremals,
   for (auto it = mcol.rbegin(); it!=mcol.rend(); ++it) // makes |z| decreasing
     if (DescentStatus::isDescent(descent_value(s,it->x))) // descent for |z|?
     {
-      BlockElt z = it->x;
-      MuCoeff mu = it->coef; // $\mu(z,sy)$, which is nonzero
+      const BlockElt z = it->x;
+      const MuCoeff mu = it->coef; // $\mu(z,sy)$, which is nonzero
 
       size_t lz = length(z);
       polynomials::Degree d = (ly-lz)/2; // power of |q| used below
 
-      auto in_it = extremals.cbegin();
       if (mu==MuCoeff(1)) // avoid useless multiplication by 1 if possible
-	for (; in_it!=extremals.cend() and length(*in_it)<lz; ++in_it)
+	for (BlockElt x : extremals)
 	{
-	  BlockElt x=*in_it;
+	  if (length(x)>=lz)
+	    break; // now only case |x==z| possibly needs consideration
 	  KLPol& dst = klv[prim_index(x,desc_y)];
 	  KLPolRef pol = KL_pol(x,z);
 	  dst.safeSubtract(pol,d); // subtract $q^d.P_{x,z}$ from |klv| for |x|
 	}
       else // (rare) case that |mu>1|
-	for (; in_it!=extremals.cend() and length(*in_it)<lz; ++in_it)
+	for (BlockElt x : extremals)
 	{
-	  BlockElt x=*in_it;
+	  if (length(x)>=lz)
+	    break; // now only case |x==z| possibly needs consideration
 	  KLPol& dst = klv[prim_index(x,desc_y)];
 	  KLPolRef pol = KL_pol(x,z);
 	  dst.safeSubtract(pol,d,mu); // subtract $q^d.mu.P_{x,z}$
@@ -530,23 +534,29 @@ void KL_table::mu_correction(const BlockEltList& extremals,
 
 } // |KL_table::mu_correction|
 
-/* A method that takes a row |klv| of completed KL polynomials, computed by
-   |recursion_column| at |y| and extremal elements |x| listed in |ext|, and
-   transfers them to the main storage structures |d_KL|, |d_mu|. Its tasks are
+/*
+  A method that takes a row |klv| of completed KL polynomials, computed by
+  |recursion_column| at |y| and extremal elements |x| and then intersperses
+  values at other primitive elements, and computes |mu| values. Its tasks are
 
-   - generate the list of all primitive elements for |y|, which contains |ext|
-   - for each primitive element |x|, if it is extremal just look up $P_{x,y}$
-     as |klv[x]|, if |x| is primitive but not extremal, compute that polynomial
-     (as sum of two $P_{x',y}$ in the same column); hash and store the result
-   - record nonzero $P_{x,y}$ as $(x,P)$ and similarly any non-zero $\mu(x,y)$
+  - for each primitive element |x|, if it is extremal just store a non-zero
+    |mu| value if the value $P_{x,y}$ found in |klv| gives rise to one;
+  - if |x| is primitive but not extremal, compute that polynomial $P(x,y)$
+    (as sum of two $P_{x',y}$ in the same column) and store it in |klv|;
+     no checking for |mu| values is necessary for these |x|
+  - Add |mu| values equal to 1 for all elements in the "down set" of |y|
 
-   For the latter point there are two categories of |x|: the extremal ones
-   (which can conveniently be handled in the loop over |x|), and those found
-   by a (complex or real) descent from |y| itself (they have $\mu(x,y)=1$).
-   The latter are of length one less than |y| (but there can be extremal |x|
-   of that length as well with nonzero mu), and are primitive only in the real
-   type 2 case; we must treat them outside the loop over primitive elements.
- */
+  A subtle point here is that elements |x| of length one less than |y| can have
+  $\mu(x,y)\neq0$ whether or not |klv| stores a polynomial for |x|. If |x| is
+  extremal, then it can be that $P_{x,y}$ is a nonzero constant, which then is
+  stored in |klv| and also as $\mu(x,y)$. But if |x| is non-extremal, then it
+  might either primitivize to |y| itself, which implies $\mu(x,y)=1$, or |x|
+  might be primitive but with $P_{x,y}$ computed as the sum of two polynomials,
+  one of which is $P_{y,y}=1$ and the other zero; then again $\mu(x,y)=1$. The
+  non-extremal |x| with non-zero $\mu(x,y)$ are then precisely the descents
+  from |y|, and they all have $\mu(x,y)=1$; this is the third case above, which
+  involves elements that may or may not also occur in the second case.
+*/
 void KL_table::complete_primitives(std::vector<KLPol>& klv, BlockElt y)
 {
   Mu_list mu_pairs; // those |x| with |mu(x,y)>0|
@@ -574,9 +584,6 @@ void KL_table::complete_primitives(std::vector<KLPol>& klv, BlockElt y)
     }
   }
   assert(KL_it==klv.rend());
-
-  // clear an entry that is no longer necessary and won't otherwise be cleared
-  klv[self_index(y)]=Zero; // this one nonzero entry is beyond |length_floor(y)|
 
   Mu_list downs;
   auto ds = down_set(block(),y);
@@ -631,7 +638,7 @@ void KL_table::complete_primitives(std::vector<KLPol>& klv, BlockElt y)
   in which the formula for an 'i1' ascent can be exploited in spite of the
   presence of $P_{s.x,y}$, because that term can be computed on the fly.
 
-  The sum involving mu, produced by |mu_new_formula|, has terms involving
+  The sum involving $\mu$, produced by |mu_new_formula|, has terms involving
   $P_{x,u}\mu(u,y}$, so when doing a downward loop over |x| it pays to keep
   track of the previous |u| with nonzero $\mu(u,y)$.
 
@@ -644,7 +651,6 @@ void KL_table::new_recursion_column(std::vector<KLPol>& cur_col, BlockElt y)
   const auto desc_y = descent_set(y);
   const auto height = col_size(y);
 
-  cur_col[self_index(y)]=One; // everything above will remain |Zero|
   auto KL_y = [this,&cur_col,desc_y] (BlockElt x) -> KLPol
     { return cur_col[prim_index(x,desc_y)]; };
 
@@ -659,11 +665,11 @@ void KL_table::new_recursion_column(std::vector<KLPol>& cur_col, BlockElt y)
   const auto downs_end = mu_pairs.end(); // record separation for final sorting
 
   auto col_it = // |*col_it| will be entry for $P_{x,y}$
-    cur_col.begin()+height; // the upper bound for written part
+    cur_col.rend()-height; // the upper bound for written part
    // reverse loop through primitive elements
-  for (BlockElt x = length_less(l_y); prim_back_up(x,desc_y); )
+  for (BlockElt x = length_less(l_y); prim_back_up(x,desc_y); ++col_it)
   {
-    KLPol& Pxy = *--col_it; // this is the slot we shall write into
+    KLPol& Pxy = *col_it; // this is the slot we shall write into
     unsigned int s= ascent_descent(x,y);
     if (s<rank()) // a primitive element that is not extremal; easy case
     { // equation (1.9) in recursion.pdf
@@ -771,10 +777,9 @@ void KL_table::new_recursion_column(std::vector<KLPol>& cur_col, BlockElt y)
       else // |first_endgame_pair| found nothing
 	assert(Pxy.isZero()); // just check unchanged since initialised
     } // end of no |NiceAscent| case
-  } // for(BlockElt x = length_less(l_y); prim_back_up(x,desc_y); --col_it)|
-  assert(col_it==cur_col.begin());
+  } // for(BlockElt x = length_less(l_y); prim_back_up(x,desc_y); ++col_it)|
+  assert(col_it==cur_col.rend());
 
-  cur_col[self_index(y)] = Zero; // clean up
   { // shuffle |mu_pairs| into increasing order
     Mu_list downs; // set apart initial part which is increasing
     downs.splice(downs.begin(),mu_pairs,mu_pairs.begin(),downs_end);
@@ -900,13 +905,13 @@ void KL_table::silent_fill(BlockElt limit)
 	      [this] ()
 	      { for (column_IO& col : columns)
 		{
-		  BlockElt y = col.y;
-		  tab.fill_KL_column(klv,col.y); //compute
+		  const BlockElt y = col.y;
+		  tab.fill_KL_column(klv,y); //compute
 
 		  // transfer values to |col.non_zeros| while cleaning up |klv|
-		  const RankFlags desc_y = tab.descent_set(col.y);
+		  const RankFlags desc_y = tab.descent_set(y);
 		  auto it = klv.rend()-tab.col_size(y);
-		  for (BlockElt x = tab.length_floor(col.y);
+		  for (BlockElt x = tab.length_floor(y);
 		       tab.prim_back_up(x,desc_y); ++it)
 		  {
 		    auto& Pxy = *it;
