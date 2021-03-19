@@ -38,6 +38,11 @@ wgraph::WGraph wGraph(const KL_table&);
 
 /* Namely: the definition of KL_table itself */
 
+struct KL_pair
+{ BlockElt x; KLIndex P;
+  KL_pair (BlockElt x=UndefBlock, KLIndex P=0) : x(x), P(P) {}
+  bool operator< (const KL_pair& other) const { return x<other.x; }
+};
 struct Mu_pair
 { BlockElt x; MuCoeff coef;
   Mu_pair (BlockElt x,MuCoeff coef) : x(x), coef(coef) {}

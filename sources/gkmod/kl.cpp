@@ -871,41 +871,101 @@ void KL_table::silent_fill(BlockElt limit)
 	} // |for y|
       else
       {
+	struct output_pair
+	{ BlockElt x; KLPol P;
+	  output_pair(BlockElt x, KLPol&& P): x(x), P(std::move(P)) {}
+	};
+	struct column_IO
+	{ BlockElt y; // input : column number
+	  simple_list<output_pair> non_zeros; // output: row number-value pairs
+	  column_IO(BlockElt y): y(y), non_zeros() {}
+	};
+
 	struct worker
 	{ KL_table& tab;
 	  std::vector<KLPol> klv; // working vector, at end holds thread result
-	  BlockElt y;
+	  sl_list<column_IO> columns;
 	  std::thread t;
 
-	  worker(KL_table& parent, BlockElt our_y)
+	  worker(KL_table& parent)
 	    : tab(parent)
 	    , klv(tab.size()+1,Zero) // |primitivize| needs full block size + 1
-	    , y(our_y)
-	    , t([this]() { tab.fill_KL_column(klv,y); })
+	    , columns()
+	    , t()
 	  {}
-	};
 
-	std::vector<worker> threads; threads.reserve(ys.size());
-	for (BlockElt y:ys)
-	{ // since |prepare_prim_index| has side effect, keep it outside thread
-	  prepare_prim_index(descent_set(y)); // before looking up |KL_pol(x,y)|
-	  threads.emplace_back(*this,y); // start threads in parallel
+	  void go()
+	  {
+	    auto f = // argument to be given to the |std::thread| constructor
+	      [this] ()
+	      { for (column_IO& col : columns)
+		{
+		  BlockElt y = col.y;
+		  tab.fill_KL_column(klv,col.y); //compute
+
+		  // transfer values to |col.non_zeros| while cleaning up |klv|
+		  const RankFlags desc_y = tab.descent_set(col.y);
+		  auto it = klv.rend()-tab.col_size(y);
+		  for (BlockElt x = tab.length_floor(col.y);
+		       tab.prim_back_up(x,desc_y); ++it)
+		  {
+		    auto& Pxy = *it;
+		    if (not Pxy.isZero())
+		    { // move |Pxy| into |col.non_zeros|
+		      col.non_zeros.push_front(output_pair(x,std::move(Pxy)));
+		      Pxy=Zero; // return |Pxy| to well defined zero state
+		    }
+		  } // |while|
+		} // |for(col)|
+	      };
+	      t=std::thread(std::move(f));
+	  } // |go|
+
+	}; // |worker|
+
+	const unsigned n_threads
+	  = std::min(static_cast<unsigned>(ys.size()),
+		     std::thread::hardware_concurrency());
+	std::vector<worker> threads; threads.reserve(n_threads);
+
+	// create |n_threads| workers, for now inactive
+	for (unsigned int i=0; i<n_threads; ++i)
+	  threads.emplace_back(*this);
+
+	// distribute |ys| among workers
+	{ unsigned int i=0;
+	  for (BlockElt y : ys)
+	  { // since |prepare_prim_index| has side effect, keep it outside thread
+	    prepare_prim_index(descent_set(y)); // to enable using |KL_pol(x,y)|
+	    threads[i].columns.push_back(column_IO(y));
+	    i = (i+1)%n_threads; // distribute round robin
+	  }
 	}
 
+	// launch the worker threads
+	for (auto& w : threads)
+	  w.go();
+
 	// wait for completion of all threads
-	for (auto& thr: threads)
-	  thr.t.join();
+	for (auto& w: threads)
+	  w.t.join();
 
 	// now reap completed threads sequentially
 	for (const auto& thr: threads)
 	{
 	  // commit
-	  BlockElt y = thr.y;
-	  d_KL[y].reserve(col_size(y));
-	  for (unsigned i=0; i<col_size(y); ++i)
-	    d_KL[y].push_back(hash.match(thr.klv[i]));
+	  for (const auto& col : thr.columns)
+	  {
+	    const BlockElt y = col.y;
+	    const auto desc_y = descent_set(y);
+	    auto& dst = d_KL[y];
 
-	  d_holes.remove(y);
+	    dst.assign(col_size(y),zero);
+	    for (auto it=col.non_zeros.wcbegin(); not it.at_end(); ++it)
+	      dst[prim_index(it->x,desc_y)] = hash.match(it->P);
+
+	    d_holes.remove(y);
+	  }
 	} // |for(const auto& thr:threads)|
       } // |else|
     } // |for(l)|
