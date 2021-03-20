@@ -444,19 +444,11 @@ void KL_table::recursion_column (BlockElt y,weyl::Generator s,
 	    ));
   } // |for (BlockElt x : extremals)| (reversed)
 
-  // now subtract mu-corrections from all of |cur_col|
-  mu_correction(extremals,desc_y,sy,s,cur_col);
-
-} // |KL_table::recursion_column|
-
 /*
-  Subtract from all polynomials in |cur_col| the correcting terms in the
-  K-L recursion.
-
-  When we call |mu_correction|, the polynomial |cur_col[i]| already contains,
-  for all |i| and with |x==extremals[i]|, the terms in $P_{x,y}$ corresponding
-  to $c_s.c_{y'}$, where |y'| is an |s| descent of |y| as before. The tables
-  |d_KL| and |d_mu| have been filled in for elements of length lees than |l(y)|.
+  The polynomial |cur_col[i]| now contains, for |i| and with |x==extremals[i]|,
+  the terms in $P_{x,y}$ corresponding to $c_s.c_{y'}$, where |y'| is an
+  |s| descent of |y| as before. The tables |d_KL| and |d_mu| have been filled in
+  for elements of length lees than |l(y)|.
 
   The recursion formula is of the form:
   $$
@@ -477,10 +469,8 @@ void KL_table::recursion_column (BlockElt y,weyl::Generator s,
   possibility $x=z$ with $P_{x,z}=1$.) Either direction of the outer loop on $z$
   would work, but taking it decreasing is more natural.
  */
-void KL_table::mu_correction(const BlockEltList& extremals,
-			     RankFlags desc_y, BlockElt sy, weyl::Generator s,
-			     std::vector<KLPol>& cur_col)
-{
+
+  // now subtract mu-corrections from all of |cur_col|
   const Mu_column& mcol = d_mu[sy];
   size_t ly = length(sy)+1; // the length of |y|, otherwise |y| is not used here
 
@@ -521,7 +511,7 @@ void KL_table::mu_correction(const BlockEltList& extremals,
 
     } // |for (it->reverse(mcol))| |if(isDescent(descentValue(s,it->x))|
 
-} // |KL_table::mu_correction|
+} // |KL_table::recursion_column|
 
 /*
   A method that takes a row |cur_col| of completed KL polynomials, computed by
@@ -570,6 +560,7 @@ void KL_table::complete_primitives(std::vector<KLPol>& cur_col, BlockElt y)
       BlockEltPair xs = cayley(s,x);
       Pxy = lookup(xs.first,desc_y,cur_col);
       Pxy.safeAdd(lookup(xs.second,desc_y,cur_col));
+      // no need to check for |mu| here: |down_set| has the only possible cases
     }
   }
   assert(KL_it==cur_col.rend());
