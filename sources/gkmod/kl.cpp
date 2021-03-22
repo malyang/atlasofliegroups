@@ -36,6 +36,7 @@
 #include <sstream>
 #include <string>
 #include <thread>
+#include <mutex>
 
 #include <sys/time.h>
 #include <sys/resource.h> // for getrusage in verbose
@@ -837,7 +838,11 @@ void KL_table::silent_fill(BlockElt limit)
       BlockElt y_limit = l<max_length ? length_less(l+1) : limit;
       for (BlockElt y=y_start; y<y_limit; ++y)
 	if (d_holes.isMember(y))
+	{
 	  ys.push_back(y);
+	  prepare_prim_index(descent_set(y)); // before looking up |KL_pol(x,y)|
+	}
+
 
       if (ys.size()<4) // don't bother splitting into very few threads
 	for (BlockElt y:ys)
@@ -845,7 +850,6 @@ void KL_table::silent_fill(BlockElt limit)
 	  // due to |primitivize|, working vector needs full block size plus one
 	  std::vector<KLPol> klv(block().size()+1,Zero); // full column
 
-	  prepare_prim_index(descent_set(y)); // before looking up |KL_pol(x,y)|
 	  fill_KL_column(klv,y);
 	  // commit
 	  d_KL[y].reserve(col_size(y));
@@ -866,14 +870,33 @@ void KL_table::silent_fill(BlockElt limit)
 	  column_IO(BlockElt y): y(y), non_zeros() {}
 	};
 
+	class distributor
+	{
+	  std::mutex own;
+	  simple_list<BlockElt> roll;
+	public:
+	  distributor() : own(),roll() {};
+	  void fill (sl_list<BlockElt>& ys) { roll=ys.undress(); }
+	  BlockElt pull ()
+	  { std::lock_guard<std::mutex> lock(own);
+	    if (roll.empty())
+	      return UndefBlock;
+	    BlockElt ticket = roll.front();
+	    roll.pop_front();
+	    return ticket;
+	  }
+	} tickets; // |tickets| will be the unique instance of this class
+
 	struct worker
 	{ KL_table& tab;
+	  distributor& tickets;
 	  std::vector<KLPol> klv; // working vector, at end holds thread result
 	  sl_list<column_IO> columns;
 	  std::thread t;
 
-	  worker(KL_table& parent)
+	  worker(KL_table& parent, distributor& tickets)
 	    : tab(parent)
+	    , tickets(tickets)
 	    , klv(tab.size()+1,Zero) // |primitivize| needs full block size + 1
 	    , columns()
 	    , t()
@@ -883,25 +906,35 @@ void KL_table::silent_fill(BlockElt limit)
 	  {
 	    auto f = // argument to be given to the |std::thread| constructor
 	      [this] ()
-	      { for (column_IO& col : columns)
+	      { auto it = columns.begin();
+		assert(not columns.at_end(it)); // start with something on list
+		do
 		{
+		  column_IO& col = *it;
 		  const BlockElt y = col.y;
 		  tab.fill_KL_column(klv,y); //compute
 
 		  // transfer values to |col.non_zeros| while cleaning up |klv|
 		  const RankFlags desc_y = tab.descent_set(y);
-		  auto it = klv.rend()-tab.col_size(y);
+		  auto klv_it = klv.rend()-tab.col_size(y);
 		  for (BlockElt x = tab.length_floor(y);
-		       tab.prim_back_up(x,desc_y); ++it)
+		       tab.prim_back_up(x,desc_y); ++klv_it)
 		  {
-		    auto& Pxy = *it;
+		    auto& Pxy = *klv_it;
 		    if (not Pxy.isZero())
 		    { // move |Pxy| into |col.non_zeros|
 		      col.non_zeros.push_front(output_pair(x,std::move(Pxy)));
 		      Pxy=Zero; // return |Pxy| to well defined zero state
 		    }
 		  } // |while|
-		} // |for(col)|
+		  if (columns.at_end(++it)) // advance, and see if end was hit
+		  {
+		    BlockElt y = tickets.pull(); // try to acquire new work
+		    if (y!=UndefBlock)
+		      columns.insert(it,column_IO(y)); // add a new column
+		  }
+		} // |do|
+		while (not columns.at_end(it));
 	      };
 	      t=std::thread(std::move(f));
 	  } // |go|
@@ -915,17 +948,16 @@ void KL_table::silent_fill(BlockElt limit)
 
 	// create |n_threads| workers, for now inactive
 	for (unsigned int i=0; i<n_threads; ++i)
-	  threads.emplace_back(*this);
+	  threads.emplace_back(*this,tickets); // all threads share |tickets|
 
-	// distribute |ys| among workers
-	{ unsigned int i=0;
-	  for (BlockElt y : ys)
-	  { // since |prepare_prim_index| has side effect, keep it outside thread
-	    prepare_prim_index(descent_set(y)); // to enable using |KL_pol(x,y)|
-	    threads[i].columns.push_back(column_IO(y));
-	    i = (i+1)%n_threads; // distribute round robin
-	  }
+	// distribute initial |ys| among workers
+	for (auto& thread : threads)
+	{
+	  assert(not ys.empty());
+	  thread.columns.push_back(ys.front());
+	  ys.pop_front();
 	}
+	tickets.fill(ys); // remaining |ys| will be distributed as tickets
 
 	// launch the worker threads
 	for (auto& w : threads)
