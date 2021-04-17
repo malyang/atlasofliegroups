@@ -133,7 +133,11 @@ K_0(quasisplit_form(inner_class(integrality_datum(G,gamma),G.distinguished_invol
  W_left(G): acting on m-vectors
  similarly:
  gamma is an m-vector, gamma##gamma is an infinitesimal character for G
- W_int(G,gamma##gamma)=Weyl group of integrality datum =W_int(G,gamma##gamma)_left x W_int(G,gamma##gamma)_right
+
+DV: THIS NEEDS TO BE gamma##(-gamma); note condition earlier gammaL+gammaR
+ in X^*.
+
+W_int(G,gamma##gamma)=Weyl group of integrality datum =W_int(G,gamma##gamma)_left x W_int(G,gamma##gamma)_right
  W_left(G,gamma)=W_int(G,gamma##gamma): acting on m-vectors
 }
 
@@ -166,10 +170,22 @@ w_parameter(parameter_w(G,gamma,w)=(G,gamma,w)
 }
 set parameter_w(RealForm G,ratvec gamma, WeylElt w)=Param:parameter_g(G,gamma,inverse(w)*gamma)
 
+{this one should work for _any_ gamma, and send 1_W to spherical parameter}
+set parameter1_w(RealForm G, ratvec gamma, WeylElt w) = Param:
+parameter_g(G,w*gamma,-gamma)
+
+{ this is meant to recover w from parameter_w(G,gamma,w) }
 set w_parameter(Param p)=(RealForm,ratvec,WeylElt):
 let (valid,w)=conjugate_to(left_G(p.real_form),p.gamma_L,p.gamma_R) in
 assert(valid,"w_parameter failed");
 (p.real_form,p.gamma_L,w)
+
+{ this is meant to recover w from parameter1_w(G,gamma,w) }
+set w_parameter1(Param p)=(RealForm,ratvec,WeylElt):
+let (valid,w)=conjugate_to(left_G(p.real_form),p.gamma_L,-p.gamma_R) in
+assert(valid,"w_parameter1 failed");
+(p.real_form,p.gamma_L,w)
+
 
 set w(Param p)=WeylElt:let (,,w)=w_parameter(p) in w
 
@@ -183,6 +199,10 @@ for p in params do [p.to_string, p.gamma_L.to_string,p.gamma_R.to_string,p.nu_C.
 
 set gp_alg_elt(ParamPol P)=[(Split,WeylElt)]:for (c,p) in %P do
 let (,,w)=w_parameter(p) in (c,w) od
+
+{more or less differs from gp_alg_elt by mult by long element (on some side?)}
+set gp_alg_elt1(ParamPol P)=[(Split,WeylElt)]:for (c,p) in %P do
+let (,,w)=w_parameter1(p) in (c,w) od
 
 set *([(Split,WeylElt)] x,Param p)=
 let rv=null_module(p.real_form) in
