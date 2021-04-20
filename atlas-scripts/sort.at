@@ -29,7 +29,7 @@ set reverse_sort ([int] v) = [int]: sort(v)~[:]
 }
 set sort (int n, (int,int->bool)leq) = [int]:
    let merge ([int] a, int na, [int] b, int nb) = [int]:
-     let i=0, j=0 in
+        let i=0, j=0 in
      for :na+nb
      do if i<na and (j=nb or leq(a[i],b[j]))
         then a[i] next i+:=1
