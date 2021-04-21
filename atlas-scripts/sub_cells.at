@@ -92,7 +92,10 @@ set sub_digraph(WGraph graph,[int] S)=WGraph:
 od)
 
 set sub_graph(WGraph graph,[int] S)=WGraph:
-(graph.root_datum,for (tau,edges) in graph.nodes do
+{ Originally used graph.root_datum }
+{ Changed to sub_root_datum(graph.root_datum,S).derived }
+
+(sub_root_datum(graph.root_datum,S).derived,for (tau,edges) in graph.nodes do
     (tau,
 	##for (target,mult) in edges do
 	    let tau_target=tau(graph.nodes[target]) in
