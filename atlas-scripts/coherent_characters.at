@@ -69,8 +69,11 @@ let rd_dual=Y[0].root_datum in
 for w in ct.class_representatives do
  let y=W_elt(rd_dual,w.word) in trace_coherent(y,Y) od
 
+set character_coherent_Y(CharacterTable ct, RealForm G_dual)=
+character_coherent_dual(ct,KGB(G_dual))
+
 set character_coherent_Y(RealForm G,CharacterTable ct)=[int]:
-character_coherent_dual(ct,KGB(G.dual.quasisplit_form))
+character_coherent_Y(ct,G.dual.quasisplit_form)
 
 
 {involutions in W fixed by conjugation action of w}

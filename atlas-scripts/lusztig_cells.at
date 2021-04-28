@@ -296,8 +296,19 @@ char=assert(valid,"root data are not locally isomorphic");permute_character(M,ct
  ct_G.inner_product(char,character_coherent_Y(G,ct_G)),
  ct_G.inner_product(char,character_coherent_I(ct_G)))
 
+set four_inner_products(RealForm G,RealForm G_dual,CharacterTable ct_G,[int] char_G)=
+let (valid,M)=root_permutation(G,ct_G.root_datum) then
+char=assert(valid,"root data are not locally isomorphic");permute_character(M,ct_G,char_G) in
+(ct_G.inner_product(char,character_coherent_B(G,ct_G)),
+ ct_G.inner_product(char,character_coherent_X(G,ct_G)),
+ ct_G.inner_product(char,character_coherent_Y(ct_G,G_dual)),
+ ct_G.inner_product(char,character_coherent_I(ct_G)))
+
 set four_inner_products(RealForm G,CharacterTable ct_G,[[int]] chars)=
 for char in chars do four_inner_products(G,ct_G,char) od
+
+set four_inner_products(RealForm G,RealForm G_dual,CharacterTable ct_G,[[int]] chars)=
+for char in chars do four_inner_products(G,G_dual,ct_G,char) od
 
 {_sgn version shouldn't be necessary, here for historical/debugging
  reasons, not called}
@@ -370,10 +381,45 @@ tabulate( ["#O^v","diag","dim","deg","fdeg","sigma","sigma*sgn","b","x","y","i",
   prints(new_line,"lusztig cells for G:"); show_lusztig_cells(G,st_G,st_G_v);
   prints(new_line,"full decomposition of BXYI: ");show_big_table(G,st_G.ct)
 
+set show_four_inner_products_special(RealForm G,RealForm G_dual,SpringerTable st_G,SpringerTable st_G_v)=
+let tip=four_inner_products(G,G_dual,st_G.ct,st_G.special_characters) then   {orbits indexed by special orbits in G}
+other=four_inner_products(G,G_dual,st_G.ct,lusztig_cells_characters_special(G,st_G,st_G_v))  {for each orbit mult((sum over Lusztig left cell),BXYI)} then
+()=prints("tip: ", tip, new_line, "other: ", other) then
+lusztig_cells=lusztig_cells(G,st_G,st_G_v) then
+(indices,orbits)=st_G.special_orbits_indexed in
+prints(new_line,"Table of inner products for G=", G,new_line,"#: number of special orbit O_v of G^v in list of all orbits",new_line,
+"diag: diagram of orbit O_v",new_line,
+"dim: dimension of special representation",new_line,
+"deg: degree of special representation",new_line,
+"bxyi: multiplicity of special in coherent continuation representations B,X,Y,I",new_line,
+"BXYI: inner product of Lusztig left cell character with coherent continuation representations B,X,Y,I");
+tabulate( ["#O^v","diag","dim","deg","fdeg","sigma","sigma*sgn","b","x","y","i", "B", "X","Y", "I"]#
+ for i:#indices do let (a,b,bprime,c)=tip[i] then (d,e,eprime,f)=other[i] then
+  j=indices[i] in
+ [j.to_string,
+  st_G.dual_map(st_G.special_orbits[i]).diagram.to_string,
+  {st_G_v.orbits[j].diagram.to_string,}{wrong order}
+  st_G.ct.dimension(lusztig_cells[i][0]).to_string,
+  st_G.ct.degree(lusztig_cells[i][0]).to_string,
+  if #st_G.fake_degrees>0 then st_G.fake_degrees[i].to_string else "" fi,
+  lusztig_cells[i].to_string,
+  (for a in lusztig_cells[i] do st_G.ct.tensor_sign_index(a) od).to_string,
+  a.to_string,b.to_string,bprime.to_string,c.to_string, d.to_string,e.to_string,eprime.to_string,f.to_string] od);
+  prints(new_line,"Springer table of G_^v:");show_reps(st_G_v);
+  prints(new_line,"Springer table of G:");show_reps(st_G);
+  prints(new_line,"Orbits for G:");show_long(st_G);
+  prints(new_line,"lusztig cells for G:"); show_lusztig_cells(G,st_G,st_G_v);
+  prints(new_line,"full decomposition of BXYI: ");show_big_table(G,st_G.ct)
+
 set show_four_inner_products_special(RealForm G)=void:
 let st_0=G.springer_table then
 st=update_fake_degrees(G,st_0) in
 show_four_inner_products_special(G,st, G.dual.springer_table)
+
+set show_four_inner_products_special(RealForm G,RealForm G_dual)=void:
+let st_0=G.springer_table then
+st=update_fake_degrees(G,st_0) in
+show_four_inner_products_special(G,G_dual,st, G.dual.springer_table)
 
 
 
