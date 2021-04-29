@@ -1,3 +1,5 @@
+<cells.at
+
 set projector (CharacterTable ct, W_rep (dim,ops), [int] char_values) = mat:
   let rd=ct.root_datum_parent, Q=null(dim,dim)  in
   for (w,action) in W_parabolic_act(rd,all_simples(rd),dim,ops)
