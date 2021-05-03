@@ -830,6 +830,12 @@ void KL_table::silent_fill(BlockElt limit)
   {
     const unsigned min_length = length(first_hole());
     const unsigned max_length = length(limit<=size() ? limit-1 : size()-1);
+
+    //set timers for KL computation
+  std::time_t time0;
+  std::time(&time0);
+  std::time_t time;
+
     // fill the lists
     for (unsigned l=min_length; l<=max_length; ++l)
     {
@@ -985,6 +991,18 @@ void KL_table::silent_fill(BlockElt limit)
 	  }
 	} // |for(const auto& thr:threads)|
       } // |else|
+      // this is where reporting should go
+         std::time(&time);
+	 double deltaTime = difftime(time, time0);
+
+            std::cerr << "l=" << std::setw(3) << l // completed length
+	<< ", y="  << std::setw(6)
+	<< y_limit-1 // last y value done
+	<< ", polys:"  << std::setw(11) << storage_pool.size()
+	      //	<< ", mat:"  << std::setw(11) << kl_size
+	<< ", clock time so far " << deltaTime << "s."
+	<<  std::endl;
+
     } // |for(l)|
 
     // after all columns are done the hash table is freed, only the store remains
