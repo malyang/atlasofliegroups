@@ -835,7 +835,8 @@ void KL_table::silent_fill(BlockElt limit)
   std::time_t time0;
   std::time(&time0);
   std::time_t time;
-
+  size_t kl_size = 0;
+  
     // fill the lists
     for (unsigned l=min_length; l<=max_length; ++l)
     {
@@ -986,7 +987,8 @@ void KL_table::silent_fill(BlockElt limit)
 	    dst.assign(col_size(y),zero);
 	    for (auto it=col.non_zeros.wcbegin(); not it.at_end(); ++it)
 	      dst[prim_index(it->x,desc_y)] = hash.match(it->P);
-
+	    
+	    kl_size += d_KL[y].size();
 	    d_holes.remove(y);
 	  }
 	} // |for(const auto& thr:threads)|
@@ -999,7 +1001,7 @@ void KL_table::silent_fill(BlockElt limit)
 	<< ", y="  << std::setw(6)
 	<< y_limit-1 // last y value done
 	<< ", polys:"  << std::setw(11) << storage_pool.size()
-	      //	<< ", mat:"  << std::setw(11) << kl_size
+	<< ", mat:"  << std::setw(11) << kl_size
 	<< ", clock time so far " << deltaTime << "s."
 	<<  std::endl;
 
