@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cross-rank deterministic regression for polygon Hall--skein straightening."""
+"""Cross-rank deterministic regression for classical polygon straightening."""
 
 from __future__ import annotations
 
@@ -70,13 +70,15 @@ def build_certificate() -> dict:
     }
     return {
         "status": "PASS",
+        "specialization": "classical Ptolemy straightening at omega=1",
         "ranks": audits,
         "totals": totals,
         "maximum_rank": 6,
         "polygon_count": len(audits),
         "scope_note": (
-            "The regression verifies the polygon straightening combinatorics "
-            "with exact symbolic Laurent coefficients.  General Hall-algebra "
+            "The regression verifies classical polygon straightening with "
+            "exact integer coefficients.  Quantum state/elevation confluence "
+            "is imported from the stated/walled skein theorems.  General Hall "
             "claims are proved in the accompanying TeX paper."
         ),
     }
@@ -109,7 +111,7 @@ def main() -> None:
     args.json.write_text(json.dumps(data, indent=2, sort_keys=True), encoding="utf-8")
     write_tex(data, args.tex)
 
-    print("Type-A Hall--skein cross-rank regression: PASS")
+    print("Type-A classical Hall--skein cross-rank regression: PASS")
     for item in data["ranks"]:
         print(
             f"  A{item['rank']}: diagonals={item['diagonals']}, "
