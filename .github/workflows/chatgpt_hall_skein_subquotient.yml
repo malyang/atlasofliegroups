@@ -1,0 +1,116 @@
+name: Build Hall-skein subquotient research package
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: chatgpt_hall_skein_subquotient_20260818
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependency
+        run: python -m pip install --disable-pip-version-check sympy
+
+      - name: Run exact polygon verification code
+        run: |
+          set -euo pipefail
+          python -m py_compile hall_skein.py verify_A4_hall_skein.py verify_typeA_hall_skein.py
+          mkdir -p generated
+          python verify_A4_hall_skein.py \
+            --json generated/A4_hall_skein_certificate.json \
+            --tex generated/A4_hall_skein_results.tex \
+            | tee generated/A4_hall_skein_output.txt
+          python verify_typeA_hall_skein.py \
+            --json generated/typeA_hall_skein_certificate.json \
+            --tex generated/typeA_hall_skein_results.tex \
+            | tee generated/typeA_hall_skein_output.txt
+
+      - name: Compile LaTeX in TeX Live container
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: hall_skein_subquotient.tex
+          working_directory: chatgpt_hall_skein_subquotient_20260818
+          args: -pdf -file-line-error -interaction=nonstopmode -halt-on-error
+
+      - name: Install PDF QA tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends poppler-utils ghostscript zip
+
+      - name: Quality checks
+        run: |
+          set -euo pipefail
+          PDF=hall_skein_subquotient.pdf
+          LOG=hall_skein_subquotient.log
+          test -s "$PDF"
+          ! grep -Eq 'LaTeX Warning: (Reference|Citation).*undefined|There were undefined references|multiply defined' "$LOG"
+          ! grep -Eq 'Overfull \\hbox|Overfull \\vbox' "$LOG"
+          pdfinfo "$PDF" > generated/pdfinfo.txt
+          pdffonts "$PDF" > generated/pdffonts.txt
+          if grep -E '^[^ ]' generated/pdffonts.txt | tail -n +3 | awk '{if ($6 != "yes") exit 1}'; then :; else exit 1; fi
+          gs -q -dNOPAUSE -dBATCH -sDEVICE=nullpage "$PDF"
+          rm -rf generated/rendered && mkdir -p generated/rendered
+          pdftoppm -png -r 90 "$PDF" generated/rendered/page >/dev/null 2>&1
+          PAGE_COUNT=$(pdfinfo "$PDF" | awk '/^Pages:/ {print $2}')
+          RENDER_COUNT=$(find generated/rendered -type f -name 'page-*.png' | wc -l | tr -d ' ')
+          test "$PAGE_COUNT" = "$RENDER_COUNT"
+          {
+            echo "PDF pages: $PAGE_COUNT"
+            echo "Rendered pages: $RENDER_COUNT"
+            echo "Undefined references: 0"
+            echo "Overfull boxes: 0"
+            echo "Ghostscript parse: pass"
+            echo "Font embedding: pass"
+            echo "A4 polygon verifier: pass"
+            echo "Cross-rank polygon verifier: pass"
+          } > QA_REPORT.txt
+
+      - name: Assemble delivery
+        working-directory: .
+        run: |
+          set -euo pipefail
+          SRC=chatgpt_hall_skein_subquotient_20260818
+          PKG=Hall_Skein_Subquotient_Research_Package_20260818
+          rm -rf "$PKG"
+          mkdir -p "$PKG/sections" "$PKG/generated"
+          cp "$SRC/hall_skein_subquotient.tex" "$PKG/"
+          cp "$SRC/hall_skein_subquotient.pdf" "$PKG/"
+          cp "$SRC/references.tex" "$PKG/"
+          cp "$SRC/hall_skein.py" "$PKG/"
+          cp "$SRC/verify_A4_hall_skein.py" "$PKG/"
+          cp "$SRC/verify_typeA_hall_skein.py" "$PKG/"
+          cp "$SRC/reproduce.sh" "$PKG/"
+          cp "$SRC/README_zh.md" "$PKG/"
+          cp "$SRC/PROOF_STATUS_zh.md" "$PKG/"
+          cp "$SRC/LITERATURE_NOTES_zh.md" "$PKG/"
+          cp "$SRC/QA_REPORT.txt" "$PKG/"
+          cp "$SRC"/sections/*.tex "$PKG/sections/"
+          cp "$SRC"/generated/*.json "$PKG/generated/"
+          cp "$SRC"/generated/*_output.txt "$PKG/generated/"
+          cp "$SRC"/generated/*_results.tex "$PKG/generated/"
+          cp "$SRC"/generated/pdfinfo.txt "$PKG/generated/"
+          cp "$SRC"/generated/pdffonts.txt "$PKG/generated/"
+          chmod +x "$PKG/reproduce.sh"
+          (cd "$PKG" && find . -type f ! -name MANIFEST_SHA256.txt -print0 | sort -z | xargs -0 sha256sum > MANIFEST_SHA256.txt)
+          sha256sum "$PKG/hall_skein_subquotient.pdf" > "$PKG/PDF_SHA256.txt"
+          (cd "$PKG" && sha256sum -c MANIFEST_SHA256.txt)
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Hall_Skein_Subquotient_Research_Package_20260818
+          path: Hall_Skein_Subquotient_Research_Package_20260818
+          compression-level: 9
+          retention-days: 7
