@@ -18,10 +18,10 @@ file & purpose\\
 \texttt{sections/*.tex}
  & section sources\\
 \texttt{hall\_skein.py}
- & polygon arcs, crossings, smoothings, state-sum straightening,
+ & polygon arcs, crossings, smoothings, classical state-sum straightening,
    confluence and triangulations\\
 \texttt{verify\_A4\_hall\_skein.py}
- & exhaustive heptagon/type-$A_4$ certificate\\
+ & exhaustive heptagon/type-$A_4$ classical certificate\\
 \texttt{verify\_typeA\_hall\_skein.py}
  & deterministic ranks $2$ through $6$ regression\\
 \texttt{generated/*.json}
@@ -48,26 +48,32 @@ The script:
 \end{enumerate}
 
 The only Python dependency beyond the standard library is SymPy.  The code
-uses exact symbolic Laurent expressions; no floating-point comparison is
-used.
+uses exact integer expressions at the classical specialization $\omega=1$;
+no floating-point comparison is used.
 
 \subsection{What is and is not automated}
 
-The programs implement the polygon part of the proof:
+The programs implement the classical polygon part of the proof:
 \begin{itemize}[leftmargin=2.3em]
 \item enumeration of diagonals and triangulations;
 \item exact crossing detection;
-\item both local smoothings;
-\item recursive straightening in $\mathbb Q(\omega)$;
+\item both local Ptolemy smoothings;
+\item recursive integer-coefficient straightening;
 \item equality of expansions for every tested first-crossing choice;
 \item associativity tests for products of arc diagrams.
 \end{itemize}
 
-They do not derive the bound-quiver module category or count exact Hall
-extensions.  The paper uses Canakci--Schroll's extension-smoothing theorem and
-the general exact Hall triangularity to prove that those Hall terms lie below
-the crossing leading term.  A future full implementation would combine a
-bound-quiver Hall-number engine with \texttt{hall\_skein.py} through
+A quantum chord calculation needs endpoint elevations/states and, for
+geometric coefficients, wall data.  The programs deliberately do not replace
+those data by a context-free factor $\omega^{\pm1}$; quantum confluence is
+imported from the stated/walled skein basis theorems cited in
+\cref{sec:skein}.
+
+The programs also do not derive the bound-quiver module category or count
+exact Hall extensions.  The paper uses Canakci--Schroll's extension-smoothing
+theorem and the general exact Hall triangularity to prove that those Hall
+terms lie below the crossing leading term.  A future full implementation would
+combine a bound-quiver Hall-number engine with \texttt{hall\_skein.py} through
 \cref{alg:Hall-to-theta}.
 
 \subsection{Determinism and quality checks}
