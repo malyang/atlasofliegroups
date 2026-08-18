@@ -1,105 +1,58 @@
 \begin{abstract}
-Let $A$ be a finite-dimensional algebra and
-$\MM=\Mor(\proj A)$ the exact category of morphisms between finitely generated
-projective right $A$-modules.  Li's maximal-rigid/support-$\tau$-tilting
-correspondence places the rigid part of $\MM$ on the two-term silting fan.  In a
-cluster-tilted realization, earlier stages of this project proved that full
-morphism homology reconstructs the reduced object, its extension spaces,
-cluster character, quantum seed and quantum theta label.  They also constructed,
-when the mutable exchange matrix is invertible, one global bicharacter twist of
-the exact Hall algebra whose multiplication agrees with quantum cluster
-multiplication on every rigid compatibility cone.  The singular-rank case was
-left only chamberwise.
+Let $A$ be a finite-dimensional algebra, let
+$\MM=\Mor(\proj A)$ be the exact category of morphisms between finitely
+generated projective right $A$-modules, and assume that a reachable component
+of its rigid objects is identified with the cluster pattern of a
+cluster-tilted realization.  Put $K=K_0^{\rm sp}(\proj A)$,
+$L=K\oplus K$, and let $D(p,q)=q-p$.  For a reachable ordered maximal rigid
+object $R$, write $\Delta_R$ for its split-index matrix, $G_R$ for the cluster
+$g$-matrix reconstructed from morphism homology, and
+$\mathsf L_R=G_R\Delta_R^{-1}$ for the chamber transfer from presentation
+weights to cluster $g$-vectors.
 
-This paper closes that gap and identifies the exact obstruction.  Let $K$ be
-the split projective lattice, $L=K\oplus K$ the exact term lattice,
-$D=(-I\ I):L\to K$ the split-difference map, and let
-$R=f_1\oplus\cdots\oplus f_n$ be a reachable ordered basic maximal rigid
-morphism object.  Write $\Delta_R$ for its split-index matrix, $G_R$ for the
-cluster $g$-matrix reconstructed from homology, and
+We determine exactly which principal quantum parameters can be realized by
+one global bicharacter correction of the exact Hall multiplication.  For an
+integral skew form $S$ on $K$, a contractible-radical term form with initial
+boundary value $S$ exists and restricts to the mutable quantum form in every
+rigid chamber if and only if
 \[
- \mathsf L_R=G_R\Delta_R^{-1}
+ \mathsf L_R^TS\mathsf L_R=S
+ \qquad\text{for every reachable }R.
 \]
-for the chamber transfer from presentation weights to cluster $g$-vectors.
-For a skew form $S$ on $K$, the affine principal quantisation transported to
-$R$ has mutable block $G_R^TSG_R$.  We prove that a single
-contractible-radical term-lattice form with initial boundary value $S$ exists
-if and only if
-\[
- \Delta_R^TS\Delta_R=G_R^TSG_R
- \quad\text{for every reachable }R,
-\]
-equivalently
-\[
- \mathsf L_R^TS\mathsf L_R=S.
-\]
-Thus all globalizable Hall quantisations form the integral fixed lattice
-\[
- \Qglob=\Skew(K)^{\Hol},
-\]
-where $\Hol$ is the presentation-fan transfer group.  The global target form is
-necessarily $D^TSD$, and the correcting Hall cocycle is
-$D^TSD-\Lambda_{\MM}$.  In particular $S=0$ always globalizes, with no rank
-assumption.  Therefore the canonical principal-coefficient quantum atlas has
-one global exact-Hall cocycle in every skew-symmetric rank; on each rigid
-chamber its mutable cluster variables commute, exactly as prescribed by the
-canonical principal quantum form.  When $B_0^T\Lambda_0=dI$, the form
-$S=\Lambda_0$ is fixed by the whole transfer group and recovers the earlier
-coefficient-free theorem.
+The form is then uniquely $D^TSD$, so the globalizable parameters constitute
+the integral fixed lattice of the fan-transfer group.  The corresponding Hall
+cocycle is $D^TSD-\Lambda_{\MM}$.  In particular, $S=0$ always globalizes,
+with no rank assumption; this gives a single global Hall correction for the
+canonical principal-coefficient quantization.  If
+$B_0^T\Lambda_0=dI$, then $S=\Lambda_0$ is invariant and recovers the
+full-rank coefficient-free construction.
 
-Adjacent chamber transfers differ by rank one.  We prove that the relative
-transition has the form
+Adjacent chamber transfers are shown to be rank-one maps
+$T=I+v\ell^T$ with primitive wall covector $\ell$ and $\ell^Tv=0$.  We prove
 \[
- T=I+v\ell^T,
- \qquad \ell^Tv=0,
+ T^TST=S \quad\Longleftrightarrow\quad Sv=c\ell
+ \quad(c\in\mathbb Z).
 \]
-where $\ell$ is the primitive integral wall covector.  For any integral skew
-form $S$,
-\[
- T^TST=S
- \quad\Longleftrightarrow\quad
- Sv=c\ell\quad\text{for some }c\in\mathbb Z.
-\]
-Consequently every nontrivial wall in the full-rank atlas is an integral
-symplectic transvection.  This turns the piecewise-unimodular presentation-to-
-cluster map into a piecewise symplectic map and gives an edge-local algorithm
-for computing $\Qglob$.
-
-The full principal seed carries frozen directions, and here a second
-obstruction appears.  Requiring one global form on $L\oplus K_{\mathrm{fr}}$
-with a fixed frozen basis and all contractibles in its radical is equivalent to
-the mutable invariance above together with
+Thus, in full rank, the presentation-to-cluster fan map is piecewise integral
+symplectic and every nonzero wall map is a symplectic transvection.  We also
+solve the stronger fixed-frozen problem: a global form on
+$L\oplus K_{\rm fr}$ exists precisely when mutable invariance is supplemented
+by
 \[
  (\Delta_R^T+G_R^T)(dI+SB_0)=0
- \quad\text{for every }R.
+ \qquad\text{for all }R.
 \]
-Hence the canonical choice $S=0$ globalizes mutably but, unless
-$\Delta_R=-G_R$ in every chamber, cannot globalize the full fixed-frozen
-principal form.  By contrast, in the full-rank scalar-compatible case
-$S=\Lambda_0$ satisfies $dI+\Lambda_0B_0=0$ and globalizes the whole principal
-form, with central frozen block.  Thus the correct arbitrary-rank structure is
-a global mutable Hall cocycle together with a generally crossed frozen atlas.
+Consequently the canonical choice $S=0$ generally globalizes only the mutable
+part, whereas the full-rank choice $S=\Lambda_0$ globalizes the complete
+principal form with central frozen block.
 
-Finally we formulate the incompatible-product problem as a precise kernel
-comparison.  The rigid face algebras have a universal colimit
-$\mathscr U_T$ with canonical maps both to the cocycle-twisted exact Hall
-algebra and to the reachable quantum theta algebra.  A global Hall-to-theta
-homomorphism extending all chamber maps exists exactly when the Hall kernel is
-contained in the theta kernel.  This criterion isolates the remaining
-non-rigid extension problem without discarding any Hall strata.  We also prove
-a recognition principle: any future framed critical Hall assignment with the
-correct initial normalization and mutation covariance is forced, on every
-reachable rigid morphism, to integrate to
-$\vartheta_{\Gamma_T(I(f))}$.
-
-For the nonhereditary cluster-tilted $A_4$ algebra, deterministic exact code
-enumerates all \AIVLabeledStates\ labelled paired seeds and \AIVChambers\
-rigid chambers, computes the invariant skew lattice, checks all
-\AIVOrientedMutations\ oriented walls, and solves the complete fixed-frozen
-parameter system.  It verifies the global canonical mutable cocycle, the
-symplectic-transvection identities, the fixed-frozen obstruction and the
-unique full global parameter.  Cross-rank regressions cover full-rank examples
-in ranks $2,4,6$ and singular path matrices in ranks $3,5$.  No global
-homomorphism on incompatible Hall products and no direct exact-to-critical
-Hall comparison is claimed.
+Finally, the rigid chamber algebras are assembled into a universal face
+colimit.  A global Hall-to-theta homomorphism extending all chamber maps exists
+if and only if the Hall relation kernel is contained in the theta relation
+kernel.  This reduces the remaining incompatible-extension problem to a
+precise algebraic comparison and yields a mutation-recognition principle for
+any future critical Hall construction.  Deterministic exact code verifies the
+new identities on all \AIVLabeledStates\ labelled paired seeds and
+\AIVChambers\ rigid chambers of the nonhereditary cluster-tilted $A_4$
+example, and performs additional full-rank and singular-rank regressions.
 \end{abstract}
