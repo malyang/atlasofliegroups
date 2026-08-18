@@ -1,0 +1,87 @@
+\section{Reproduction and computational scope}
+\label{sec:reproduction}
+
+The research package contains the complete TeX source, the compiled PDF, two
+Python verifiers, their JSON certificates, generated TeX macros and a shell
+script which rebuilds the deterministic outputs.
+
+\subsection{Files}
+
+The main files are:
+\begin{center}
+\begin{tabular}{p{0.34\textwidth}p{0.56\textwidth}}
+\toprule
+file & purpose\\
+\midrule
+\texttt{hall\_skein\_subquotient.tex}
+ & master LaTeX document\\
+\texttt{sections/*.tex}
+ & section sources\\
+\texttt{hall\_skein.py}
+ & polygon arcs, crossings, smoothings, state-sum straightening,
+   confluence and triangulations\\
+\texttt{verify\_A4\_hall\_skein.py}
+ & exhaustive heptagon/type-$A_4$ certificate\\
+\texttt{verify\_typeA\_hall\_skein.py}
+ & deterministic ranks $2$ through $6$ regression\\
+\texttt{generated/*.json}
+ & machine-readable certificates\\
+\texttt{reproduce.sh}
+ & one-command verification and TeX rebuild\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Reproduction}
+
+From the package root, run
+\begin{verbatim}
+./reproduce.sh
+\end{verbatim}
+The script:
+\begin{enumerate}[label=\arabic*.,leftmargin=2.3em]
+\item syntax-checks all Python files;
+\item regenerates the $A_4$ and cross-rank JSON certificates and TeX macros;
+\item runs \texttt{latexmk} to compile the paper;
+\item checks for unresolved references and overfull boxes when the relevant
+      command-line tools are available.
+\end{enumerate}
+
+The only Python dependency beyond the standard library is SymPy.  The code
+uses exact symbolic Laurent expressions; no floating-point comparison is
+used.
+
+\subsection{What is and is not automated}
+
+The programs implement the polygon part of the proof:
+\begin{itemize}[leftmargin=2.3em]
+\item enumeration of diagonals and triangulations;
+\item exact crossing detection;
+\item both local smoothings;
+\item recursive straightening in $\mathbb Q(\omega)$;
+\item equality of expansions for every tested first-crossing choice;
+\item associativity tests for products of arc diagrams.
+\end{itemize}
+
+They do not derive the bound-quiver module category or count exact Hall
+extensions.  The paper uses Canakci--Schroll's extension-smoothing theorem and
+the general exact Hall triangularity to prove that those Hall terms lie below
+the crossing leading term.  A future full implementation would combine a
+bound-quiver Hall-number engine with \texttt{hall\_skein.py} through
+\cref{alg:Hall-to-theta}.
+
+\subsection{Determinism and quality checks}
+
+The JSON output is sorted and all enumeration orders are deterministic.  The
+build workflow checks:
+\begin{enumerate}[label=(\roman*),leftmargin=2.3em]
+\item successful execution of both verifiers;
+\item successful multi-pass LaTeX compilation;
+\item absence of unresolved citations or references;
+\item absence of overfull boxes;
+\item PDF parseability, page rendering and embedded fonts;
+\item a SHA-256 manifest for all payload files in the delivery directory.
+\end{enumerate}
+
+The finite certificate is an implementation audit, not a replacement for the
+general proof in \cref{sec:crossing,sec:subquotient}.
