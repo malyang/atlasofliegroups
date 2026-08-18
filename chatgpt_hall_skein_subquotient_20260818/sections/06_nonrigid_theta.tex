@@ -1,0 +1,237 @@
+\section{Non-rigid Hall objects and their theta straightening}
+\label{sec:nonrigid}
+
+The subquotient theorem is stronger than a statement about generators.  It
+assigns a canonical quantum cluster element to every Hall basis object,
+including objects with self-extensions.  This section gives the explicit
+recursive formula and proves its independence of choices.
+
+\subsection{The Hall-corrected straightening operator}
+
+Let $M$ be a reduced object and write its multidiagonal as
+\[
+ D(M)=\{\gamma_1,\ldots,\gamma_r\}.
+\]
+If $D(M)$ is non-crossing, set
+\begin{equation}
+ \St_{\mathrm H}(M)=\eps_M.
+ \label{eq:straightening-rigid-base}
+\end{equation}
+Suppose $D(M)$ has a crossing.  Choose crossing summands
+$M_\gamma,M_\delta$ and write
+\[
+ M=M_\gamma\oplus M_\delta\oplus R.
+\]
+Expand the actual Hall product in the fixed order:
+\begin{equation}
+ (\eps_\gamma\star_S\eps_\delta)\star_S\eps_R
+ =a_M\eps_M+
+  \sum_{E\prec M}a_E\eps_E,
+ \qquad a_M\ne0.
+ \label{eq:Hall-product-containing-M}
+\end{equation}
+The coefficient $a_M$ is a product of split Hall coefficients and is
+invertible in $\mathbb Q(\omega)$.  Replace the crossing pair by the skein
+right-hand side and define recursively
+\begin{equation}
+\boxed{
+\begin{aligned}
+ \St_{\mathrm H}(M)=a_M^{-1}\Big(&
+ \big(
+   \omega^{a(\gamma,\delta)}
+      \eps_{\gamma\#_0\delta}
+  +\omega^{b(\gamma,\delta)}
+      \eps_{\gamma\#_\infty\delta}
+ \big)\star_S\eps_R\\
+ &-\sum_{E\prec M}a_E\St_{\mathrm H}(E)
+ \Big).
+\end{aligned}}
+\label{eq:Hall-corrected-straightening}
+\end{equation}
+Every recursive argument has smaller crossing number by
+\cref{thm:extension-smoothing}.
+
+\begin{theorem}[Canonical Hall straightening]
+\label{thm:canonical-Hall-straightening}
+The recursion \eqref{eq:Hall-corrected-straightening} terminates and is
+independent of:
+\begin{enumerate}[label=(\roman*),leftmargin=2.3em]
+\item the chosen crossing pair;
+\item the chosen parenthesization of the Hall product;
+\item the chosen sequence of subsequent crossings.
+\end{enumerate}
+It yields a finite expression
+\begin{equation}
+ \St_{\mathrm H}(M)
+ =\sum_{D\in\mathfrak N(P)}c_{M,D}(\omega)\eps_D,
+ \qquad c_{M,D}(\omega)\in\mathbb Q(\omega),
+ \label{eq:Hall-rigid-expansion}
+\end{equation}
+which is the unique normal-form representative of $\eps_M$ modulo $\Jsk$.
+\end{theorem}
+
+\begin{proof}
+Termination is \cref{lem:termination}.  Formula
+\eqref{eq:Hall-corrected-straightening} is exactly the oriented reduction
+obtained by multiplying a Hall--skein defect by the remaining factors and
+solving for its invertible leading term.  Choice independence and uniqueness
+are therefore the confluence statement of
+\cref{thm:Hall-skein-diamond}.  The irreducible terms are the non-crossing
+basis classes of \cref{cor:rigid-normal-basis}.
+\end{proof}
+
+The recursion is effective whenever the finite-field Hall coefficients for
+the relevant presentation spaces can be computed.  It never asks for a
+quantum Euler characteristic of a singular quiver Grassmannian: all quantum
+coefficients are obtained from exact Hall numbers and the fixed local skein
+relation.
+
+\subsection{Theta interpretation}
+
+Compose the normal form with the global quotient map.  For every reduced
+object $M$, define
+\begin{equation}
+ \qchar_M^{\rm sk}
+ :=\Phi_{\rm sk}(\eps_M).
+ \label{eq:skein-quantum-character}
+\end{equation}
+This is a well-defined quantum cluster element for rigid and non-rigid $M$.
+It should be distinguished from an a priori quiver-Grassmannian quantum
+cluster character, which is not known in this generality.
+
+\begin{theorem}[Non-rigid theta expansion]
+\label{thm:nonrigid-theta-expansion}
+For every reduced Hall basis object $M$,
+\begin{equation}
+ \boxed{
+ \qchar_M^{\rm sk}
+ =\sum_{D\in\mathfrak N(P)}
+    c_{M,D}(\omega)\Theta_{g(D)},
+ }
+ \label{eq:nonrigid-theta-expansion}
+\end{equation}
+where the coefficients are those of
+\eqref{eq:Hall-rigid-expansion}.  The expansion is finite and unique.
+Moreover:
+\begin{enumerate}[label=(\roman*),leftmargin=2.3em]
+\item if $M$ is rigid, the sum has one term and
+      $\qchar_M^{\rm sk}=\Theta_{g(M)}$;
+\item if $M$ is non-rigid, the expansion has support only on rigid direct sums
+      with the same frozen/weight degree;
+\item no positivity or bar-invariance of the individual coefficients
+      $c_{M,D}(\omega)$ is asserted.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Apply $\Phi_{\rm sk}$ to
+\eqref{eq:Hall-rigid-expansion}.  By
+\cref{thm:Hall-skein-subquotient}, the image of a non-crossing class $\eps_D$
+is $\Theta_{g(D)}$.  Uniqueness follows because the non-crossing skein basis is
+the theta basis in the polygon case.
+\end{proof}
+
+In finite type, the cluster fan is complete and every theta label belongs to a
+cluster cone.  Thus the right-hand side of
+\eqref{eq:nonrigid-theta-expansion} is also the unique expansion in normalized
+quantum cluster monomials.
+
+\subsection{Incompatible rigid products}
+
+Let $X,Y$ be rigid but incompatible.  Their individual images are theta basis
+elements, but their exact Hall product contains non-rigid middle terms.  Write
+\[
+ \eps_X\star_S\eps_Y
+ =\sum_E h_{X,Y}^E\eps_E.
+\]
+Substituting \eqref{eq:nonrigid-theta-expansion} gives the explicit identity
+\begin{equation}
+ \Theta_{g(X)}\Theta_{g(Y)}
+ =\sum_{E,D}
+   h_{X,Y}^E(\omega)c_{E,D}(\omega)\Theta_{g(D)}.
+ \label{eq:incompatible-theta-expansion}
+\end{equation}
+The total coefficient of $\Theta_{g(D)}$ is therefore
+\begin{equation}
+ m_{X,Y}^{D}(\omega)
+ =\sum_E h_{X,Y}^E(\omega)c_{E,D}(\omega).
+ \label{eq:theta-structure-from-Hall}
+\end{equation}
+These are exactly the theta multiplication structure constants, because the
+left-hand side is the product in the quantum cluster algebra.
+
+\begin{corollary}[Quantum meaning of every middle term]
+\label{cor:middle-term-meaning}
+Every non-rigid middle term $E$ appearing in an incompatible Hall product has
+a canonical, finite quantum/theta value $\qchar_E^{\rm sk}$.  The weighted sum
+of these values with the exact Hall coefficients is the theta product.  Hence
+no Hall stratum is discarded; the quotient identifies the linear combinations
+forced by the skein relations.
+\end{corollary}
+
+\subsection{The one-crossing case}
+
+Suppose $\gamma,\delta$ cross once.  The two $2$-Calabi--Yau extension
+directions have middle terms the two smoothings.  The exact morphism Hall
+product sees the split object and the exact extensions in its chosen
+direction.  Write
+\[
+ \eps_\gamma\star_S\eps_\delta
+ =h^{\rm sp}\eps_{\gamma\oplus\delta}
+  +\sum_jh_j\eps_{E_j}.
+\]
+The quotient relation gives the explicit non-rigid value
+\begin{equation}
+ \qchar_{\gamma\oplus\delta}^{\rm sk}
+ =(h^{\rm sp})^{-1}\left(
+   \omega^a\Theta_{g(\gamma\#_0\delta)}
+  +\omega^b\Theta_{g(\gamma\#_\infty\delta)}
+  -\sum_jh_j\qchar_{E_j}^{\rm sk}
+ \right).
+ \label{eq:one-crossing-nonrigid}
+\end{equation}
+Thus the missing opposite smoothing is not claimed to be an exact extension in
+the same Hall direction.  It enters through the quotient relation dictated by
+the $2$-Calabi--Yau/skein multiplication law.
+
+\subsection{Relation with cluster multiplication formulas}
+
+For a pair of objects $L,M$ with one-dimensional extension space in a
+$2$-Calabi--Yau category, the classical cluster character satisfies
+\[
+ CC_T(L)CC_T(M)=CC_T(E)+CC_T(E'),
+\]
+where $E,E'$ are the two exchange middle terms.  Caldero--Keller prove this in
+finite type, and Palu proves the general constructible $2$-Calabi--Yau formula
+\cite{CalderoKeller,PaluMultiplication}.  Chen--Xiao--Xu and
+Xiao--Xu--Yang give weighted quantum and motivic refinements for arbitrary
+pairs \cite{ChenXiaoXu,XiaoXuYang}.
+
+Our quotient may be viewed as a strict algebraic packaging of these formulas
+in polygon type.  Rather than assigning a character only after selecting a
+pair and summing extension varieties, it imposes all local two-direction
+multiplication identities as one two-sided ideal in the exact morphism Hall
+algebra.  The Diamond theorem proves that the identities are globally
+consistent and that their quotient has the expected theta basis.
+
+\subsection{Algorithmic form}
+
+\begin{algorithm}[Hall-to-theta straightening]
+\label{alg:Hall-to-theta}
+Given a reduced Hall object $M$:
+\begin{enumerate}[label=\arabic*.,leftmargin=2.3em]
+\item Compute its Krull--Schmidt multidiagonal $D(M)$.
+\item If $D(M)$ is non-crossing, output $\Theta_{g(M)}$.
+\item Choose a crossing pair $\gamma,\delta$ and compute the exact Hall
+      expansion \eqref{eq:Hall-product-containing-M}.
+\item Apply \eqref{eq:Hall-corrected-straightening}.
+\item Recurse on all lower-crossing middle terms and collect the theta basis
+      coefficients.
+\end{enumerate}
+The number of recursive levels is at most $\crs(M)$.
+\end{algorithm}
+
+The accompanying code implements the geometric straightening and confluence
+part.  Computing the exact coefficients $a_E$ from an arbitrary bound quiver
+is a separate representation-theoretic task and is not silently replaced by
+polygon combinatorics.
