@@ -1,19 +1,26 @@
 #!/usr/bin/env python3
-"""Exact combinatorial certificates for polygon Hall--skein straightening.
+"""Exact classical certificates for polygon Hall--skein straightening.
 
 The library deliberately separates the theorem from the finite audit.  It
-implements the type-A polygon combinatorics used in the paper:
+implements the type-A polygon combinatorics used in the paper at the
+commutative specialization omega=1:
 
 * diagonals and boundary arcs of a convex m-gon;
-* crossing detection and the two Ptolemy/Kauffman smoothings;
-* recursive Laurent-polynomial straightening with coefficients w and w^{-1};
+* crossing detection and the two Ptolemy smoothings;
+* recursive integer-coefficient straightening;
 * confluence checks for different first-crossing choices;
 * products of straightened multicurves;
 * enumeration of triangulations.
 
-It does not attempt to compute Hall structure constants of an arbitrary bound
-quiver.  Those constants enter the paper through the exact Hall filtration and
-its triangular comparison with the skein straightening system.
+The quantum relation needs endpoint elevations/states and, for general
+coefficients, wall data.  A bare collection of unoriented chords does not
+contain that information.  Quantum associativity and confluence are therefore
+imported in the paper from the stated/walled skein theorems rather than being
+silently approximated here.
+
+The code also does not attempt to compute Hall structure constants of an
+arbitrary bound quiver.  Those constants enter the paper through the exact Hall
+filtration and its triangular comparison with the skein straightening system.
 """
 
 from __future__ import annotations
@@ -22,7 +29,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 from itertools import combinations
 from math import comb
-from typing import Callable, Dict, Iterable, Iterator, List, Mapping, Sequence, Tuple
+from typing import Dict, Iterable, Iterator, List, Mapping, Sequence, Tuple
 
 import sympy as sp
 
@@ -30,7 +37,9 @@ Arc = Tuple[int, int]
 Curve = Tuple[Arc, ...]
 Expansion = Dict[Curve, sp.Expr]
 
-W = sp.Symbol("w", nonzero=True)
+# The finite certificate is deliberately the classical Ptolemy specialization.
+SMOOTHING_WEIGHT_0 = sp.Integer(1)
+SMOOTHING_WEIGHT_1 = sp.Integer(1)
 
 
 def normalize_arc(a: int, b: int, m: int) -> Arc:
@@ -136,8 +145,8 @@ def _resolve_with_first(curve: Curve, m: int, pair: Tuple[int, int]) -> Expansio
     c0 = canonical_curve(remainder + list(s0), m)
     c1 = canonical_curve(remainder + list(s1), m)
     return add_expansions(
-        scale_expansion(resolve(c0, m), W),
-        scale_expansion(resolve(c1, m), W ** -1),
+        scale_expansion(resolve(c0, m), SMOOTHING_WEIGHT_0),
+        scale_expansion(resolve(c1, m), SMOOTHING_WEIGHT_1),
     )
 
 
