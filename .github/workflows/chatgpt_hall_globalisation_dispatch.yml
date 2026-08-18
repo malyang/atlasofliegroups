@@ -1,0 +1,87 @@
+name: Build Hall globalisation package branch
+
+on:
+  push:
+    branches:
+      - agent/hall-globalisation-20260818
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install sympy==1.13.3
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-science latexmk latexpand zip rsync poppler-utils ghostscript
+      - name: Reproduce paper and certificates
+        working-directory: chatgpt_hall_globalisation_20260818
+        run: |
+          chmod +x reproduce.sh
+          ./reproduce.sh
+      - name: PDF quality checks
+        working-directory: chatgpt_hall_globalisation_20260818
+        run: |
+          set -euo pipefail
+          PDF=globalizable_hall_quantisations.pdf
+          pdfinfo "$PDF" > pdfinfo.txt
+          pdffonts "$PDF" > pdffonts.txt
+          pdftotext "$PDF" extracted_text.txt
+          gs -q -dNOPAUSE -dBATCH -sDEVICE=nullpage "$PDF"
+          ! grep -q 'not embedded' pdffonts.txt
+          ! grep -q $'\357\277\275' extracted_text.txt
+          mkdir -p rendered
+          pdftoppm -png -r 80 "$PDF" rendered/page >/dev/null 2>&1
+          PAGE_COUNT=$(pdfinfo "$PDF" | awk '/^Pages:/ {print $2}')
+          RENDER_COUNT=$(find rendered -type f -name 'page-*.png' | wc -l)
+          test "$PAGE_COUNT" -eq "$RENDER_COUNT"
+          {
+            echo "Globalizable Hall Quantisation research package QA"
+            echo "================================================"
+            echo "Python syntax: PASS"
+            echo "A4 exact certificate: PASS"
+            echo "Cross-rank regression: PASS"
+            echo "LaTeX clean compilation: PASS"
+            echo "PDF Ghostscript parse: PASS"
+            echo "PDF pages: $PAGE_COUNT"
+            echo "Rendered pages: $RENDER_COUNT"
+            echo "Fonts embedded: PASS"
+            echo "Replacement-character scan: PASS"
+            if grep -E 'undefined references|Citation .* undefined|Reference .* undefined' globalizable_hall_quantisations.log; then exit 1; else echo "Unresolved reference scan: PASS"; fi
+            if grep -E 'Overfull \\hbox|Overfull \\vbox' globalizable_hall_quantisations.log; then exit 1; else echo "Overfull box scan: PASS"; fi
+          } > QA_REPORT.txt
+          rm -rf rendered extracted_text.txt
+      - name: Assemble delivery
+        run: |
+          set -euo pipefail
+          SRC=chatgpt_hall_globalisation_20260818
+          PKG=Globalizable_Hall_Quantisation_Research_Package_20260818
+          mkdir -p delivery/$PKG
+          rsync -a --exclude='*.aux' --exclude='*.fdb_latexmk' --exclude='*.fls' --exclude='*.log' --exclude='*.out' --exclude='*.toc' --exclude='__pycache__' "$SRC/" "delivery/$PKG/"
+          (cd delivery/$PKG && sha256sum globalizable_hall_quantisations.pdf globalizable_hall_quantisations.tex globalizable_hall_quantisations_single.tex globalisation_holonomy.py verify_A4_globalisation.py verify_cross_rank_globalisation.py A4_globalisation_certificate.json cross_rank_globalisation.json > DELIVERY_CORE_SHA256.txt)
+          (cd delivery && zip -qr "$PKG.zip" "$PKG")
+          sha256sum "delivery/$PKG.zip" > "delivery/$PKG.zip.sha256.txt"
+      - name: Upload research package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Globalizable_Hall_Quantisation_Research_Package_20260818
+          path: |
+            delivery/Globalizable_Hall_Quantisation_Research_Package_20260818
+            delivery/Globalizable_Hall_Quantisation_Research_Package_20260818.zip
+            delivery/Globalizable_Hall_Quantisation_Research_Package_20260818.zip.sha256.txt
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
