@@ -78,14 +78,14 @@ Hall–skein defect 的 leading Hall basis term 是 split crossing object，系�
 
 ## D. 计算证书
 
-代码验证：
+代码在 `omega=1` 的经典 Ptolemy 特化下验证：
 
 - type A4 七边形的 14 条对角线、35 个 crossing pairs、42 个 triangulations；
 - 14^3 个 ordered triple associativity checks；
 - degree-four multidiagram 的全部 first-crossing confluence；
 - type A2–A6 的确定性跨秩回归。
 
-代码只审计 polygon smoothing；不自动计算 arbitrary bound-quiver Hall numbers。
+裸弦图不包含 endpoint elevation/state 或 wall data，因此代码不伪造一般量子权。量子合流性由 stated/walled skein 文献定理传递。代码也不自动计算 arbitrary bound-quiver Hall numbers。
 
 ## E. 未证明 / 未宣称
 
