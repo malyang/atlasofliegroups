@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic type-A4 polygon Hall--skein certificate."""
+"""Deterministic classical type-A4 polygon Hall--skein certificate."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ def build_certificate() -> dict:
     audit = audit_polygon(7)
     diagonals = all_diagonals(7)
 
-    # Record a representative incompatible pair and its two-term expansion.
+    # Record a representative incompatible pair and its Ptolemy expansion.
     sample = ((0, 3), (1, 5))
     sample_expansion = {
         str(curve): str(coefficient)
@@ -24,6 +24,7 @@ def build_certificate() -> dict:
 
     return {
         "status": "PASS",
+        "specialization": "classical Ptolemy straightening at omega=1",
         "model": "cluster type A4 as a convex heptagon",
         "vertices": audit.vertices,
         "diagonals": audit.diagonals,
@@ -37,9 +38,11 @@ def build_certificate() -> dict:
         "sample_expansion": sample_expansion,
         "diagonal_list": [list(a) for a in diagonals],
         "scope_note": (
-            "The certificate audits polygon counts and the formal two-smoothing "
-            "straightening system.  It is not a substitute for the general Hall "
-            "filtration and quotient proof in the paper."
+            "The certificate audits polygon counts and classical Ptolemy "
+            "straightening at omega=1.  Quantum endpoint-state and wall "
+            "confluence are imported from the stated/walled skein theorems.  "
+            "The certificate is not a substitute for the Hall filtration and "
+            "quotient proof in the paper."
         ),
     }
 
@@ -71,7 +74,7 @@ def main() -> None:
     args.json.write_text(json.dumps(data, indent=2, sort_keys=True), encoding="utf-8")
     write_tex(data, args.tex)
 
-    print("A4 Hall--skein certificate: PASS")
+    print("A4 classical Hall--skein certificate: PASS")
     print(f"  diagonals: {data['diagonals']}")
     print(f"  crossing pairs: {data['crossing_pairs']}")
     print(f"  triangulations: {data['triangulations']}")
