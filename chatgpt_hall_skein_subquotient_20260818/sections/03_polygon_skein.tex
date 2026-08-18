@@ -1,0 +1,191 @@
+\section{Polygon skein algebras and Hall-compatible quantization}
+\label{sec:skein}
+
+We now fix the target algebra.  The purpose of this section is not to reprove
+the skein--cluster theorem, but to state precisely the presentation and basis
+that will be compared with the Hall algebra.
+
+\subsection{Marked polygon and coefficient system}
+
+Let $P=P_{n+3}$ be an oriented convex polygon with marked vertices
+$0,1,\ldots,n+2$ in counterclockwise order.  A boundary edge is regarded as a
+frozen arc, and an internal diagonal as a mutable arc.  Fix a triangulation
+$T$ and the corresponding initial cluster seed.
+
+The previous Hall-globalization theorem supplies a quantum commutation form on
+each rigid chamber.  We choose a geometric coefficient system whose quantum
+seed has exactly these forms.  There are two standard regimes.
+
+\begin{enumerate}[label=(\roman*),leftmargin=2.3em]
+\item If the mutable exchange matrix is full rank, one may use the
+      coefficient-free compatible form and then adjoin/invert boundary arcs.
+\item In arbitrary rank, use the principal Hall-compatible parameter and its
+      walled-surface realization.  The walls encode the frozen coefficient
+      monomials, while the mutable chamber forms are those pulled back from the
+      Hall term lattice.
+\end{enumerate}
+
+The existence of skein models with arbitrary geometric coefficients for
+unpunctured surfaces is proved by Ishibashi--Kano--Yuasa
+\cite{IshibashiKanoYuasa}.  Since the theorem below only uses the local
+crossing relation, the non-crossing basis and the equality with the quantum
+cluster algebra, either convention may be used.  We denote the resulting
+frozen-localized skein algebra by
+\[
+ \Skein_\omega^{\rm fr}(P)
+\]
+and its quantum cluster algebra by
+\[
+ \Aq=\mathcal A_\omega^{\rm fr}(P).
+\]
+The coefficient ring is $\mathbb Q(\omega)$, and all boundary arcs are
+invertible.
+
+\subsection{Local skein relations}
+
+For an arc or a simple multicurve $D$, write $s_D$ for its skein class.  The
+product is vertical superposition.  At a crossing of two arcs there are two
+smoothings, denoted
+\[
+ \gamma\#_0\delta,
+ \qquad
+ \gamma\#_\infty\delta.
+\]
+Each is a two-component multicurve; a component may be a boundary edge.
+Endpoint elevations and wall states are ordered by the fixed convention of the
+coefficient system.
+
+After the usual normalization of stated arcs, the local relation takes the
+form
+\begin{equation}
+ s_\gamma s_\delta
+ =\omega^{a(\gamma,\delta)}s_{\gamma\#_0\delta}
+  +\omega^{b(\gamma,\delta)}s_{\gamma\#_\infty\delta}.
+ \label{eq:quantum-skein-relation}
+\end{equation}
+For the standard Kauffman-bracket normalization one may take
+$a=1$, $b=-1$ for one ordering and interchange the exponents for the reverse
+ordering.  In a walled coefficient model, frozen Laurent monomials can be
+absorbed into the two smoothing symbols.  We retain the symbols $a,b$ because
+the Hall quotient theorem is independent of this normalization.
+
+Two non-crossing arcs quasi-commute:
+\begin{equation}
+ s_\gamma s_\delta
+ =\omega^{\lambda_T(\gamma,\delta)}s_\delta s_\gamma.
+ \label{eq:skein-quasicommutation}
+\end{equation}
+If they belong to one triangulation, the exponent is the corresponding entry
+of the quantum commutation matrix of that seed.  This is precisely the form
+already reproduced by the Hall cocycle in
+\eqref{eq:compatible-Hall-quantum}.
+
+The contractible-loop and boundary-state relations are part of the standard
+skein presentation.  In a polygon, every closed contractible component is
+removed by a scalar, and every boundary edge is a frozen unit after
+localization.  These relations match the central specialization in
+\cref{def:Hred}.
+
+\subsection{The non-crossing basis}
+
+A simple stated multicurve in $P$ is a finite union of pairwise non-crossing
+arcs, with the prescribed endpoint order and with no removable contractible
+component.  Multiplicities are allowed.  Let
+\[
+ \mathfrak N(P)
+\]
+denote their isotopy classes after boundary edges have been recorded as frozen
+Laurent monomials.
+
+\begin{theorem}[Polygon skein basis]
+\label{thm:skein-basis}
+The elements
+\[
+ \{s_D:D\in\mathfrak N(P)\}
+\]
+form a $\mathbb Q(\omega)$-basis of
+$\Skein_\omega^{\rm fr}(P)$.  Every crossing diagram has a finite and
+choice-independent expansion in this basis obtained by repeated use of
+\eqref{eq:quantum-skein-relation}.
+\end{theorem}
+
+\begin{proof}[Source of the theorem]
+For marked surfaces, Muller proves the multicurve basis and the skein--cluster
+inclusions, with equality after Ore localization when each component has at
+least two marked points \cite{Muller}.  The polygon satisfies this hypothesis.
+The walled coefficient extension is established in
+\cite{IshibashiKanoYuasa}.  For stated skein algebras, the polygon equality and
+basis refinements are proved in \cite{CaoHuangWang}.  These results include the
+local confluence needed here.
+\end{proof}
+
+The basis may also be understood by a direct Diamond-lemma argument: resolve a
+chosen crossing, note that both smoothings reduce the total number of
+crossings, and check the finitely many local overlap types.  The deterministic
+code supplied with this paper implements this recursion for polygon chord
+multidiagrams.
+
+\subsection{Equality with the quantum cluster algebra}
+
+The diagonal $\gamma$ is a quantum cluster variable, the boundary edges are
+frozen variables, and a non-crossing multidiagonal is a normalized quantum
+cluster monomial.  The surface skein--cluster theorem gives the following.
+
+\begin{theorem}[Skein--cluster equality for polygons]
+\label{thm:skein-cluster}
+There is an algebra isomorphism
+\begin{equation}
+ \Psi_{\rm sc}:
+ \Skein_\omega^{\rm fr}(P)
+ \xrightarrow{\sim}
+ \Aq
+ \label{eq:skein-cluster-isomorphism}
+\end{equation}
+which sends every diagonal skein class to the correspondingly labelled
+quantum cluster variable and every boundary edge to its frozen variable.
+Moreover, for $D\in\mathfrak N(P)$,
+\begin{equation}
+ \Psi_{\rm sc}(s_D)
+ =M_R(\mult_D)
+ =\Theta_{g(D)}
+ \label{eq:noncrossing-theta}
+\end{equation}
+for any cluster $R$ containing the support of $D$.  Here $M_R(\mult_D)$ is the
+normalized based monomial and $\Theta_{g(D)}$ is the quantum theta function at
+its cluster-chamber label.
+\end{theorem}
+
+\begin{proof}[Source of the theorem]
+Muller proves equality of the localized skein, quantum cluster and quantum
+upper cluster algebras for marked surfaces satisfying the boundary
+hypothesis \cite{Muller}.  The coefficient and stated refinements used here
+are supplied by \cite{IshibashiKanoYuasa,CaoHuangWang}.  The identification of
+theta functions with normalized cluster monomials inside a cluster chamber is
+also a consequence of the quantum theta theory of Davison--Mandel
+\cite{DavisonMandel}.
+\end{proof}
+
+\subsection{Presentation by arcs}
+
+Let $\mathcal F_P$ be the free associative algebra over
+$\mathbb Q(\omega)$ generated by symbols $x_\gamma$ for all diagonals and
+invertible symbols for the boundary edges.  Impose:
+\begin{enumerate}[label=(\roman*),leftmargin=2.3em]
+\item the boundary and contractible-loop relations;
+\item the quasi-commutation relations for non-crossing arcs;
+\item the two-smoothing relation \eqref{eq:quantum-skein-relation} for every
+      ordered crossing pair.
+\end{enumerate}
+Then \cref{thm:skein-basis} gives
+\begin{equation}
+ \mathcal F_P/\mathcal I_{\rm sk}
+ \xrightarrow{\sim}
+ \Skein_\omega^{\rm fr}(P),
+ \label{eq:skein-presentation}
+\end{equation}
+where $\mathcal I_{\rm sk}$ is the ideal generated by these local relations.
+The irreducible normal words are indexed by $\mathfrak N(P)$.
+
+The Hall algebra already satisfies the compatible quasi-commutations and the
+boundary relations after the cocycle twist and central reduction.  Thus only
+the crossing relations have to be imposed on $\Hred$.
