@@ -1,0 +1,111 @@
+name: PR Hall globalisation research package v5
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'chatgpt_hall_globalisation_20260818/**'
+      - '.github/workflows/chatgpt_hall_globalisation_pr_v5.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependency
+        run: python -m pip install --disable-pip-version-check sympy
+
+      - name: Run exact verification code
+        working-directory: chatgpt_hall_globalisation_20260818
+        run: |
+          set -euo pipefail
+          python -m py_compile globalisation_holonomy.py verify_A4_globalisation.py verify_cross_rank_globalisation.py
+          mkdir -p generated
+          python verify_A4_globalisation.py --json generated/A4_globalisation_certificate.json --tex generated/A4_globalisation_results.tex | tee generated/A4_globalisation_output.txt
+          python verify_cross_rank_globalisation.py --json generated/cross_rank_globalisation_certificate.json --tex generated/cross_rank_globalisation_results.tex | tee generated/cross_rank_globalisation_output.txt
+
+      - name: Compile LaTeX in TeX Live container
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: globalizable_hall_quantisations.tex
+          working_directory: chatgpt_hall_globalisation_20260818
+          args: -pdf -file-line-error -interaction=nonstopmode -halt-on-error
+
+      - name: Install small PDF QA tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends poppler-utils ghostscript zip
+
+      - name: Quality checks
+        working-directory: chatgpt_hall_globalisation_20260818
+        run: |
+          set -euo pipefail
+          PDF=globalizable_hall_quantisations.pdf
+          LOG=globalizable_hall_quantisations.log
+          test -s "$PDF"
+          ! grep -Eq 'LaTeX Warning: (Reference|Citation).*undefined|There were undefined references|multiply defined' "$LOG"
+          ! grep -Eq 'Overfull \\hbox|Overfull \\vbox' "$LOG"
+          pdfinfo "$PDF" > generated/pdfinfo.txt
+          pdffonts "$PDF" > generated/pdffonts.txt
+          if grep -E '^[^ ]' generated/pdffonts.txt | tail -n +3 | awk '{if ($6 != "yes") exit 1}'; then :; else exit 1; fi
+          gs -q -dNOPAUSE -dBATCH -sDEVICE=nullpage "$PDF"
+          rm -rf generated/rendered && mkdir -p generated/rendered
+          pdftoppm -png -r 90 "$PDF" generated/rendered/page >/dev/null 2>&1
+          PAGE_COUNT=$(pdfinfo "$PDF" | awk '/^Pages:/ {print $2}')
+          RENDER_COUNT=$(find generated/rendered -type f -name 'page-*.png' | wc -l | tr -d ' ')
+          test "$PAGE_COUNT" = "$RENDER_COUNT"
+          {
+            echo "PDF pages: $PAGE_COUNT"
+            echo "Rendered pages: $RENDER_COUNT"
+            echo "Undefined references: 0"
+            echo "Overfull boxes: 0"
+            echo "Ghostscript parse: pass"
+            echo "Font embedding: pass"
+            echo "A4 exact verifier: pass"
+            echo "Cross-rank verifier: pass"
+          } > QA_REPORT.txt
+
+      - name: Assemble delivery
+        run: |
+          set -euo pipefail
+          SRC=chatgpt_hall_globalisation_20260818
+          PKG=Globalizable_Hall_Quantisation_Research_Package_20260818
+          rm -rf "$PKG"
+          mkdir -p "$PKG/sections" "$PKG/generated"
+          cp "$SRC/globalizable_hall_quantisations.tex" "$PKG/"
+          cp "$SRC/globalizable_hall_quantisations.pdf" "$PKG/"
+          cp "$SRC/references.tex" "$PKG/"
+          cp "$SRC/globalisation_holonomy.py" "$PKG/"
+          cp "$SRC/verify_A4_globalisation.py" "$PKG/"
+          cp "$SRC/verify_cross_rank_globalisation.py" "$PKG/"
+          cp "$SRC/reproduce.sh" "$PKG/"
+          cp "$SRC/README_zh.md" "$PKG/"
+          cp "$SRC/PROOF_STATUS_zh.md" "$PKG/"
+          cp "$SRC/LITERATURE_NOTES_zh.md" "$PKG/"
+          cp "$SRC/QA_REPORT.txt" "$PKG/"
+          cp "$SRC"/sections/*.tex "$PKG/sections/"
+          cp "$SRC"/generated/*.json "$PKG/generated/"
+          cp "$SRC"/generated/*_output.txt "$PKG/generated/"
+          cp "$SRC"/generated/*_results.tex "$PKG/generated/"
+          cp "$SRC"/generated/pdfinfo.txt "$PKG/generated/"
+          cp "$SRC"/generated/pdffonts.txt "$PKG/generated/"
+          chmod +x "$PKG/reproduce.sh"
+          (cd "$PKG" && find . -type f ! -name MANIFEST_SHA256.txt -print0 | sort -z | xargs -0 sha256sum > MANIFEST_SHA256.txt)
+          sha256sum "$PKG/globalizable_hall_quantisations.pdf" > "$PKG/PDF_SHA256.txt"
+          (cd "$PKG" && sha256sum -c MANIFEST_SHA256.txt)
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Globalizable_Hall_Quantisation_Research_Package_20260818
+          path: Globalizable_Hall_Quantisation_Research_Package_20260818
+          if-no-files-found: error
+          compression-level: 9
+          retention-days: 7
