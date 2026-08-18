@@ -1,0 +1,259 @@
+\section{Crossing order and Hall--skein normal forms}
+\label{sec:crossing}
+
+We now compare the exact Hall product with polygon smoothing.  The key point is
+not that the Hall coefficients equal skein coefficients before quotienting;
+they generally do not.  The key point is triangularity: the split crossing
+object is the unique top term, and every non-split middle term lies lower in a
+well-founded smoothing order.
+
+\subsection{Extension middle terms in type $A$}
+
+Let $M_\gamma,M_\delta$ be the reduced morphism objects corresponding to
+polygon diagonals $\gamma,\delta$.  An exact extension in $\MM$
+\[
+ 0\longrightarrow M_\delta\longrightarrow E\longrightarrow M_\gamma
+ \longrightarrow0
+\]
+induces a triangle in the two-term homotopy category and, after applying the
+polygon realization, a triangle in the cluster category.  The two directions
+of the $2$-Calabi--Yau extension space correspond to the two smoothings of a
+crossing.
+
+\begin{theorem}[Type-$A$ extension--smoothing triangularity]
+\label{thm:extension-smoothing}
+Let $X,Y$ be reduced objects of $\MM$ and let $E$ be the middle term of an
+exact extension of $X$ by $Y$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.3em]
+\item If the extension is split, then $E\simeq X\oplus Y$.
+\item If the extension is non-split, the reduced polygon diagram of $E$ is
+      obtained from the superposition $D(X)\cup D(Y)$ by smoothing at least
+      one crossing, followed by removal of contractible summands and polygon
+      isotopy.
+\item Consequently every non-split middle term has strictly fewer crossings
+      than the inherited superposition diagram of $X\oplus Y$.
+\end{enumerate}
+For indecomposable arcs crossing once, the two possible reduced middle terms
+in the two extension directions are precisely
+$\gamma\#_0\delta$ and $\gamma\#_\infty\delta$, up to contractible summands
+and boundary coefficient factors.
+\end{theorem}
+
+\begin{proof}
+The exact-to-homotopy identification
+\[
+ \Ext^1_{\MM}(X,Y)
+ \simeq\Hom_{K^b(\proj A)}(X,\Sigma Y)
+\]
+turns an exact extension into its mapping-cone triangle.  Under the type-$A$
+polygon model, indecomposable two-term objects are arcs and nonzero morphisms
+of degree one are represented by crossings.  Canakci--Schroll describe bases
+of extension spaces for the gentle Jacobian algebras of unpunctured surfaces
+and compute the middle terms by smoothing the corresponding crossings
+\cite{CanakciSchroll}.  In a polygon there are no bands and no puncture
+phenomena, so every indecomposable extension is of this form.
+
+For direct sums, write an extension class as a matrix of its indecomposable
+components.  Successive pullback--pushout decompositions express its middle
+term as an iterated extension along the nonzero matrix entries.  Applying the
+indecomposable smoothing description at each nonzero entry gives the claimed
+simultaneous smoothing picture.  A local smoothing removes the chosen
+geometric crossing.  Keeping the inherited embedding, it introduces no new
+crossing; passing to the unique minimal isotopy classes of arcs in a disk can
+only remove further crossings.  The extension is non-split exactly when at
+least one matrix entry is nonzero, so the decrease is strict.
+\end{proof}
+
+\begin{remark}
+The theorem is special to the surface/gentle finite-type setting.  For a
+general Jacobian algebra, extension middle terms need not admit a two-smoothing
+model.  This is the precise reason the global theorem below is restricted to
+type $A$.
+\end{remark}
+
+\subsection{A well-founded order}
+
+For a reduced object $M$, let $r(M)$ be the number of indecomposable summands,
+counted with multiplicity, and let $\crs(M)$ be the crossing number from
+\eqref{eq:crossing-number}.  Fix also a total refinement of the degeneration
+order on each finite representation variety.  Define
+\[
+ E\prec M
+\]
+if, in lexicographic order,
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $E$ has smaller crossing number than $M$; or
+\item the crossing numbers agree and $E$ is strictly more generic in the
+      extension-degeneration order; or
+\item both agree and the fixed total refinement places $E$ first.
+\end{enumerate}
+Within a fixed term class and bounded number of summands this is a
+well-founded order.  The only property used later is that every non-split
+middle term in \cref{thm:extension-smoothing} lies below the split middle term.
+
+For Hall basis objects $X,Y$, write the cocycle-twisted product as
+\begin{equation}
+ \eps_X\star_S\eps_Y
+ =h^{\rm sp}_{X,Y}\eps_{X\oplus Y}
+  +\sum_{E\prec X\oplus Y}h^E_{X,Y}\eps_E.
+ \label{eq:Hall-triangular-product}
+\end{equation}
+The split coefficient $h^{\rm sp}_{X,Y}$ is nonzero.  We work over
+$\mathbb Q(\omega)$, so it is invertible.
+
+\begin{corollary}[Crossing-leading Hall products]
+\label{cor:crossing-leading}
+If $\gamma$ and $\delta$ cross, then
+\begin{equation}
+ \eps_\gamma\star_S\eps_\delta
+ =h^{\rm sp}_{\gamma,\delta}\eps_{\gamma\oplus\delta}
+  +\sum_{E\prec\gamma\oplus\delta}
+      h^E_{\gamma,\delta}\eps_E,
+ \qquad h^{\rm sp}_{\gamma,\delta}\ne0,
+ \label{eq:crossing-Hall-expansion}
+\end{equation}
+and every $E$ in the second sum has smaller crossing number.
+\end{corollary}
+
+\subsection{Hall--skein defects and oriented reductions}
+
+For an ordered crossing pair define
+\begin{equation}
+ \mathcal R_{\gamma,\delta}
+ :=\eps_\gamma\star_S\eps_\delta
+   -\omega^{a(\gamma,\delta)}
+      \eps_{\gamma\#_0\delta}
+   -\omega^{b(\gamma,\delta)}
+      \eps_{\gamma\#_\infty\delta}.
+ \label{eq:Hall-skein-defect}
+\end{equation}
+The symbols on the right denote the normalized direct-sum classes of the two
+smoothing components, with boundary components interpreted as frozen units.
+Let
+\begin{equation}
+ \Jsk=
+ \left\langle
+   \mathcal R_{\gamma,\delta}:
+   \gamma,\delta\text{ an ordered crossing pair}
+ \right\rangle_{\rm two\text{-}sided}
+ \subseteq\Hred.
+ \label{eq:skein-ideal}
+\end{equation}
+
+Substituting \eqref{eq:crossing-Hall-expansion} into
+\eqref{eq:Hall-skein-defect} gives an oriented rule
+\begin{equation}
+\begin{aligned}
+ \eps_{\gamma\oplus\delta}
+ \longmapsto
+ (h^{\rm sp}_{\gamma,\delta})^{-1}
+ \Big(&\omega^{a(\gamma,\delta)}
+       \eps_{\gamma\#_0\delta}
+      +\omega^{b(\gamma,\delta)}
+       \eps_{\gamma\#_\infty\delta}\\
+     &-\sum_{E\prec\gamma\oplus\delta}
+       h^E_{\gamma,\delta}\eps_E\Big).
+\end{aligned}
+\label{eq:basic-Hall-straightening}
+\end{equation}
+Every term on the right has smaller crossing number.  Multiplying the defect
+on the left and right by Hall classes and expanding triangularly yields the
+same kind of rule for any object containing $\gamma\oplus\delta$ as a direct
+summand.  The leading coefficient remains invertible.
+
+\begin{lemma}[Termination]
+\label{lem:termination}
+Every sequence of oriented Hall--skein reductions terminates after finitely
+many steps in a linear combination of non-crossing Hall basis objects.
+\end{lemma}
+
+\begin{proof}
+Each reduction smooths a chosen geometric crossing in the inherited polygon
+diagram.  By \cref{thm:extension-smoothing}, all Hall correction terms also
+have strictly fewer crossings than the leading object.  Hence the
+nonnegative integer $\crs$ decreases at every step.
+\end{proof}
+
+\subsection{The filtered Diamond lemma}
+
+Termination alone does not guarantee a basis: different choices of crossing
+could a priori give different non-crossing expressions.  We now prove
+confluence.
+
+\begin{theorem}[Hall--skein Diamond lemma]
+\label{thm:Hall-skein-diamond}
+The reduction system \eqref{eq:basic-Hall-straightening}, including all its
+left and right Hall contexts, is confluent.  Consequently every class in
+$\Hred/\Jsk$ has a unique normal form which is a linear combination of the
+classes
+\[
+ \eps_D,
+ \qquad D\in\mathfrak N(P).
+\]
+These non-crossing classes are linearly independent in the quotient.
+\end{theorem}
+
+\begin{proof}
+We apply the filtered version of Bergman's Diamond lemma with the
+well-founded crossing order.  It is enough to resolve critical ambiguities.
+There are two types.
+
+\smallskip
+\noindent\emph{Disjoint crossings.}
+If two chosen crossing disks are disjoint, the local smoothings commute.  On
+the Hall side the two corresponding substitutions are made in disjoint
+factors of an associative product.  Their difference is a sum of terms in
+which both chosen crossings have been removed, so the two reductions agree
+after lower reductions.
+
+\smallskip
+\noindent\emph{Overlapping crossings.}
+Suppose the two reductions share an arc or occur in an iterated product of
+three Hall generators.  Both reduction paths start from the same associative
+Hall word.  Replace one crossing product by the right-hand side of
+\eqref{eq:Hall-skein-defect}, and do the same in the other order.  The
+resulting difference belongs to $\Jsk$, while cancellation of the common top
+Hall word leaves only terms of smaller crossing number.  By induction on the
+crossing number, every such lower element of $\Jsk$ reduces to zero.  At the
+geometric level, this induction is exactly the local confluence of the polygon
+skein relation from \cref{thm:skein-basis}; endpoint-state ambiguities are
+resolved by the boundary exchange relations already imposed in the central
+coefficient system.
+
+The base case has crossing number zero.  No leading term of a Hall--skein
+defect is non-crossing, so there is no reduction and no nonzero ambiguity in
+that degree.  Thus all critical pairs are resolvable.  The Diamond lemma gives
+unique normal forms and identifies the irreducible Hall basis classes with the
+non-crossing multidiagonals.  In particular, no nontrivial linear combination
+of irreducible classes belongs to $\Jsk$.
+\end{proof}
+
+\begin{remark}[Where Hall associativity is used]
+The skein relation alone proves confluence in the free diagram algebra.  The
+additional Hall correction terms in
+\eqref{eq:basic-Hall-straightening} could have destroyed it.  Associativity of
+$\star_S$ forces the difference between two Hall-corrected overlap reductions
+to lie in the same two-sided ideal after cancellation of the common top word;
+strict crossing decrease then closes the induction.  This is the essential
+new algebraic step.
+\end{remark}
+
+\subsection{A basis theorem for the quotient}
+
+\begin{corollary}[Rigid normal basis]
+\label{cor:rigid-normal-basis}
+The classes
+\begin{equation}
+ \left\{\overline\eps_D:D\in\mathfrak N(P)\right\}
+ \label{eq:quotient-rigid-basis}
+\end{equation}
+form a $\mathbb Q(\omega)$-basis of $\Hred/\Jsk$.  Under the polygon
+category correspondence, this basis is indexed by all rigid direct sums,
+including arbitrary multiplicities of compatible indecomposables.
+\end{corollary}
+
+\begin{proof}
+Spanning is \cref{lem:termination}; independence and uniqueness are
+\cref{thm:Hall-skein-diamond}.  A multidiagonal is non-crossing exactly when
+the corresponding direct sum has no self-extension.
+\end{proof}
