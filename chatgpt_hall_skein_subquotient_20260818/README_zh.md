@@ -66,9 +66,9 @@
 
 - `hall_skein_subquotient.tex`：主 TeX 文件
 - `sections/*.tex`：论文分节
-- `hall_skein.py`：多边形 arcs、crossings、smoothings、递归 straightening 与合流检查
-- `verify_A4_hall_skein.py`：type A4 / 七边形完整证书
-- `verify_typeA_hall_skein.py`：rank 2–6 回归
+- `hall_skein.py`：多边形 arcs、crossings、smoothings、经典 Ptolemy straightening 与合流检查
+- `verify_A4_hall_skein.py`：type A4 / 七边形经典完整证书
+- `verify_typeA_hall_skein.py`：rank 2–6 经典回归
 - `generated/*.json`：机器可读证书
 - `PROOF_STATUS_zh.md`：证明边界审计
 - `LITERATURE_NOTES_zh.md`：文献定位
@@ -83,6 +83,10 @@ python -m pip install sympy
 
 脚本将重建 JSON 证书、生成 TeX 宏并编译 PDF。
 
+## 计算证书的精确范围
+
+程序在 `omega=1` 的经典 Ptolemy 特化下验证多边形计数、终止、合流和结合律。它不会对没有 endpoint elevation/state 与 wall data 的裸弦图强行附加 `omega^{±1}`；完整量子合流性由正文引用的 stated/walled skein 定理提供。程序也不代替一般 Hall 结构常数的证明或计算。
+
 ## 严格边界
 
 本稿没有声称对任意 Jacobi-finite / 任意 cluster-tilted 代数都完成全局 Hall 同态。一般情形尚缺：
@@ -91,5 +95,3 @@ python -m pip install sympy
 - extension middle terms 严格降低的全局良序；
 - 与 theta basis 匹配的合流 normal-form system；
 - exact morphism Hall strata 到 critical/cohomological Hall classes 的直接比较。
-
-代码验证的是多边形 straightening，不代替一般 Hall 结构常数的证明或计算。
