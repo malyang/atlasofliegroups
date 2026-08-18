@@ -129,8 +129,8 @@ Hall-corrected theta expansion.
 
 \subsection{Deterministic finite certificate}
 
-The program \texttt{verify\_A4\_hall\_skein.py} works only with exact polygon
-combinatorics and formal Laurent coefficients.  It verifies:
+The program \texttt{verify\_A4\_hall\_skein.py} works with exact polygon
+combinatorics at the classical specialization $\omega=1$.  It verifies:
 \begin{center}
 \begin{tabular}{lr}
 \toprule
@@ -152,8 +152,8 @@ The triple count is
 \]
 The degree-four run traverses all multisets of four diagonals.  For every
 multidiagram with more than one possible first crossing, the program computes
-the complete Laurent-polynomial expansion for every choice and checks exact
-equality.
+the complete integer-coefficient Ptolemy expansion for every choice and checks
+exact equality.
 
 A separate cross-rank program covers cluster types $A_2$ through
 $A_{\TypeAMaxRank}$.  Across those \TypeAPolygons\ polygon models it records
@@ -169,14 +169,17 @@ first-choice confluence comparisons & \TypeATotalConfluence\\
 \bottomrule
 \end{tabular}
 \end{center}
-using exact symbolic arithmetic in $\mathbb Q(\omega)$.
+using exact integer arithmetic.
 
 \begin{remark}[What the computation certifies]
-The code checks the polygon state-sum, termination, local confluence and
-associativity conventions used by the quotient.  It does not compute every
-finite-field Hall number of \eqref{eq:A4-algebra}; those coefficients belong
-to the exact Hall expansion and enter the recursive correction
-\eqref{eq:Hall-corrected-straightening}.  The general proof that their
-non-split terms are lower is \cref{thm:extension-smoothing}, not the finite
-program.
+The code checks the classical polygon state-sum, termination, local confluence
+and associativity conventions.  It deliberately does not attach
+$\omega^{\pm1}$ to bare unoriented chords: the quantum relation depends on
+endpoint elevations/states and, for geometric coefficients, wall data.  The
+quantum confluence used in the theorem is supplied by the stated/walled skein
+basis theorems.  The code also does not compute every finite-field Hall number
+of \eqref{eq:A4-algebra}; those coefficients belong to the exact Hall
+expansion and enter the recursive correction
+\eqref{eq:Hall-corrected-straightening}.  The proof that their non-split terms
+are lower is \cref{thm:extension-smoothing}, not the finite program.
 \end{remark}
