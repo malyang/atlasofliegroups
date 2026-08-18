@@ -1,0 +1,301 @@
+\section{The morphism Hall framework in type $A$}
+\label{sec:prior}
+
+This section fixes conventions and recalls the exact-category results used by
+the new quotient construction.  We include the statements needed later so
+that the Hall--skein argument can be read independently of the earlier
+iterations.
+
+\subsection{The exact morphism category}
+
+Let $A$ be a basic finite-dimensional algebra over a field $\kk$.  Write
+$\proj A$ for the category of finitely generated projective right $A$-modules
+and
+\[
+ \MM=\Mor(\proj A).
+\]
+An object of $\MM$ is a map
+\[
+ f:P^{-1}\longrightarrow P^0,
+\]
+and a morphism from $f$ to $g:Q^{-1}\to Q^0$ is a commutative square.  The
+exact structure is degreewise split: a sequence is a conflation when its
+sequences in degrees $-1$ and $0$ split in $\proj A$.  The category is
+Krull--Schmidt, finitary over a finite field, and has homological dimension at
+most one \cite{Bautista,Li}.
+
+For a module $N$, fix a minimal projective presentation
+\[
+ P_1^N\xrightarrow{d_N}P_0^N\longrightarrow N\longrightarrow0
+\]
+and put
+\[
+ C_N=(P_1^N\xrightarrow{d_N}P_0^N),
+ \qquad
+ Z_P=(P\longrightarrow0),
+ \qquad
+ U_P=(0\longrightarrow P),
+ \qquad
+ K_P=(P\xrightarrow{1_P}P).
+\]
+The $K_P$ are contractible and projective-injective in the two-term homotopy
+window.
+
+The following normal form was proved in the preceding paper by splitting off
+invertible matrix blocks and then using minimality.
+
+\begin{theorem}[Morphism homology normal form]
+\label{thm:normal-form}
+For every $f:P^{-1}\to P^0$ there are projectives $P_f,Q_f$, unique up to
+isomorphism, such that
+\begin{equation}
+ f\simeq C_N\oplus Z_{P_f}\oplus K_{Q_f},
+ \qquad N=H^0(f)=\coker f.
+ \label{eq:normal-form}
+\end{equation}
+Moreover
+\begin{equation}
+ H^{-1}(f)=\ker f\simeq\Omega_A^2N\oplus P_f.
+ \label{eq:homology-residue}
+\end{equation}
+Consequently the full homology pair recovers the reduced object
+$f_{\rm red}=C_N\oplus Z_{P_f}$ through Krull--Schmidt cancellation
+\[
+ P_f=H^{-1}(f)\ominus\Omega_A^2H^0(f).
+\]
+Its split index is
+\begin{equation}
+ I(f)=[P^0]-[P^{-1}]
+     =g_A(N)-[P_f]
+ \quad\text{in }K_0^{\rm sp}(\proj A).
+ \label{eq:split-index}
+\end{equation}
+\end{theorem}
+
+The notation $\ominus$ in the theorem means subtraction of actual
+Krull--Schmidt multiplicities.  It is not a formal difference in a Grothendieck
+group.
+
+The extension space in $\MM$ is computed by the two-term Hom complex.  For
+$X=(P^-\xrightarrow fP^0)$ and $Y=(Q^-\xrightarrow gQ^0)$ there is a natural
+exact sequence
+\begin{equation}
+\begin{aligned}
+0\longrightarrow\Hom_{\MM}(X,Y)
+&\longrightarrow
+ \Hom_A(P^-,Q^-)\oplus\Hom_A(P^0,Q^0)\\
+&\xrightarrow{(a,b)\mapsto ga-bf}
+ \Hom_A(P^-,Q^0)
+ \longrightarrow\Ext^1_{\MM}(X,Y)\longrightarrow0.
+\end{aligned}
+\label{eq:Hom-Ext-complex}
+\end{equation}
+For reduced objects the formula may be expressed in module-theoretic form.
+
+\begin{proposition}[Reduced extension formula]
+\label{prop:reduced-Ext}
+Let $X=C_M\oplus Z_P$ and $Y=C_N\oplus Z_Q$.  Then
+\begin{align}
+ \Ext^1_{\MM}(X,Y)
+ &\simeq D\Hom_A(N,\tau M)\oplus\Hom_A(P,N),
+ \label{eq:Ext-XY}\\
+ \Ext^1_{\MM}(Y,X)
+ &\simeq D\Hom_A(M,\tau N)\oplus\Hom_A(Q,M).
+ \label{eq:Ext-YX}
+\end{align}
+In particular, full morphism homology determines rigidity and pairwise
+compatibility.
+\end{proposition}
+
+The correspondence of Li identifies support $\tau$-rigid pairs $(M,P)$ with
+rigid reduced morphism objects $C_M\oplus Z_P$ and support $\tau$-tilting pairs
+with maximal rigid objects after adjoining $K_A$ \cite{Li}.  This is the
+categorical bridge used throughout the paper.
+
+\subsection{Exact Hall algebra and normalization}
+
+Assume now $\kk=\mathbb F_q$ and enlarge scalars to a field containing
+$v=q^{1/2}$.  Let $\Hall(\MM)$ be the Ringel--Hall algebra with ordinary basis
+$[X]$ indexed by isomorphism classes.  We use the extension-normalized basis
+\[
+ \delta_X=|\Aut X|[X]
+\]
+and the skew-normalized basis
+\begin{equation}
+ \eps_X=v^{-\langle X,X\rangle_{\MM}}\delta_X.
+ \label{eq:skew-normalized-basis}
+\end{equation}
+The exact Euler form is
+\[
+ \langle X,Y\rangle_{\MM}
+ =\dim\Hom_{\MM}(X,Y)-\dim\Ext^1_{\MM}(X,Y),
+\]
+and its antisymmetrization is
+\[
+ \Lambda_{\MM}(x,y)
+ =\langle y,x\rangle_{\MM}-\langle x,y\rangle_{\MM}.
+\]
+If $\Ext^1_{\MM}(X,Y)=0$, then the only extension is split and
+\begin{equation}
+ \eps_X\diamond\eps_Y
+ =v^{\Lambda_{\MM}([X],[Y])}\eps_{X\oplus Y}.
+ \label{eq:split-Hall-product}
+\end{equation}
+
+The Grothendieck class of a morphism remembers only its projective terms:
+\begin{equation}
+ K_0(\MM)\simeq
+ K_0^{\rm sp}(\proj A)\oplus K_0^{\rm sp}(\proj A),
+ \qquad
+ [P^-\to P^0]\longmapsto([P^-],[P^0]).
+ \label{eq:term-lattice}
+\end{equation}
+This is the source of the differential-blindness of the canonical integration.
+It is also exactly the lattice on which the correcting cocycle lives.
+
+Let $L=K\oplus K$, where $K=K_0^{\rm sp}(\proj A)$, and let
+\[
+ D=(-I\ I):L\longrightarrow K,
+ \qquad D(p,q)=q-p.
+\]
+Fix a Hall-compatible quantum coefficient system at the initial seed.  It
+provides an integral skew form $S$ on the split-index lattice, or, with frozen
+directions, an extended skew form whose mutable pullback is $S$.  The previous
+paper proves that when $S$ is invariant under all presentation-to-cluster fan
+transfers, the form
+\begin{equation}
+ \widehat\Lambda_S=D^TSD
+ \label{eq:target-term-form}
+\end{equation}
+restricts to the quantum commutation form on every rigid chamber.  Define the
+bicharacter defect
+\begin{equation}
+ \Omega_S=\widehat\Lambda_S-\Lambda_{\MM}
+ \label{eq:Hall-cocycle}
+\end{equation}
+and twist homogeneous products by
+\begin{equation}
+ x\star_S y
+ =v^{\Omega_S(\deg x,\deg y)}x\diamond y.
+ \label{eq:twisted-Hall-product}
+\end{equation}
+Bilinearity of $\Omega_S$ makes $\star_S$ associative on the entire Hall
+algebra.  If $X,Y$ belong to one rigid chamber, then
+\begin{equation}
+ \eps_X\star_S\eps_Y
+ =v^{\Lambda_R(g_X,g_Y)}\eps_{X\oplus Y},
+ \label{eq:compatible-Hall-quantum}
+\end{equation}
+which is exactly the based quantum-torus product in the corresponding seed.
+For arbitrary rank, the canonical principal mutable parameter $S=0$ always
+globalizes.  When $B_0$ is invertible and $B_0^T\Lambda_0=dI$, the parameter
+$S=\Lambda_0$ gives the full-rank coefficient-free form.
+
+\subsection{Central reduction and coefficient conventions}
+
+Contractible terms should not produce new cluster variables.  Since
+$D([K_P])=D([P],[P])=0$, the target form
+\eqref{eq:target-term-form} kills every contractible direction.  Hence the
+classes $\eps_{K_P}$ are central for $\star_S$.  We first localize at them and
+then specialize them to the prescribed frozen boundary monomials.  Boundary
+arcs are also inverted when we use the frozen-localized skein algebra.
+
+\begin{definition}[Centrally reduced Hall algebra]
+\label{def:Hred}
+Let $\Hall_S^\star(\MM)$ be the cocycle-twisted Hall algebra.  The algebra
+$\Hred$ is obtained by:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item extending scalars to $\mathbb Q(\omega)$ and identifying the Hall
+      parameter $v$ with the chosen power of $\omega$;
+\item localizing at all $\eps_{K_{P_i}}$;
+\item imposing the central coefficient relations which identify the
+      contractible classes with the frozen boundary monomials of the chosen
+      polygon coefficient system.
+\end{enumerate}
+\end{definition}
+
+This operation is the analogue of the localization and central quotient in
+acyclic morphism-Hall realizations.  It does not discard any reduced
+non-rigid object.
+
+\subsection{The polygon dictionary}
+
+Assume from now on that $A$ is cluster-tilted of Dynkin type $A_n$.  Choose a
+cluster category realization
+\[
+ A\simeq\End_{\CC}(T)
+\]
+and identify $\CC$ with the cluster category of the convex polygon
+$P=P_{n+3}$.  The indecomposable objects of $\CC$ correspond to diagonals of
+$P$; cluster-tilting objects correspond to triangulations; and
+\[
+ \Ext^1_{\CC}(X_\gamma,X_\delta)\ne0
+ \quad\Longleftrightarrow\quad
+ \gamma\text{ and }\delta\text{ cross}.
+\]
+Every indecomposable object of a Dynkin cluster category is rigid.
+
+The functor from reduced projective morphisms to the two-term homotopy window,
+followed by desuspension into $\CC$, identifies
+\[
+ C_M\quad\text{and}\quad Z_{P_i}
+\]
+with the polygon diagonals not in, respectively in, the initial triangulation.
+The number of reduced indecomposable classes is
+\[
+ \frac{n(n+1)}2+n=\frac{n(n+3)}2,
+\]
+the number of diagonals of $P_{n+3}$.
+
+For a reduced object
+\[
+ M=\bigoplus_{j=1}^r M_{\gamma_j}
+\]
+write $D(M)$ for the multidiagonal $\{\gamma_1,\ldots,\gamma_r\}$, with
+multiplicities.  Define
+\begin{equation}
+ \crs(M)=
+ \#\{(i,j):i<j,\ \gamma_i\text{ crosses }\gamma_j\}.
+ \label{eq:crossing-number}
+\end{equation}
+Then $M$ is rigid if and only if $\crs(M)=0$.
+
+\subsection{The whole reduced Hall algebra is generated by arcs}
+
+The next elementary point is important: the source of the main theorem is the
+whole centrally reduced Hall algebra.
+
+\begin{lemma}[Indecomposable generation in finite representation type]
+\label{lem:indecomposable-generation}
+Let $\mathcal E$ be a finitary Krull--Schmidt exact category with finitely many
+indecomposable isomorphism classes.  Over a coefficient field in which the
+split Hall coefficients are invertible, $\Hall(\mathcal E)$ is generated by
+the basis classes of indecomposable objects.
+\end{lemma}
+
+\begin{proof}
+Let $M=M_1\oplus\cdots\oplus M_r$ be a Krull--Schmidt decomposition and
+choose an order of its summands.  The Hall product
+\[
+ \delta_{M_1}\diamond\cdots\diamond\delta_{M_r}
+\]
+contains the split object $M$ with a nonzero coefficient.  Every other middle
+term is a non-split iterated extension and degenerates to $M$.  Order
+isomorphism classes by the degeneration order, refined by total dimension.
+The displayed product is triangular with invertible diagonal coefficient.
+Induction in that finite interval expresses $\delta_M$ in the algebra
+generated by the indecomposable classes.  The same argument applies after a
+bicharacter twist, localization and central specialization.
+\end{proof}
+
+Cluster-tilted algebras of Dynkin type are representation-finite, and
+Bautista's normal form shows that $\Mor(\proj A)$ has only finitely many
+indecomposable classes up to the contractibles.  Therefore
+\cref{lem:indecomposable-generation} applies to $\Hred$.
+
+\begin{corollary}[Arc generation]
+\label{cor:arc-generation}
+The algebra $\Hred$ is generated by the reduced indecomposable classes
+$\eps_\gamma$ indexed by polygon diagonals together with the invertible frozen
+boundary monomials.
+\end{corollary}
