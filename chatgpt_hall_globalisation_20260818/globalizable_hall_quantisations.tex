@@ -1,0 +1,119 @@
+\documentclass[11pt,reqno]{amsart}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=1.01in}
+\usepackage{amsmath,amssymb,mathtools,amscd}
+\usepackage{enumitem}
+\usepackage{booktabs,longtable,array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[nameinlink,capitalize,noabbrev]{cleveref}
+\allowdisplaybreaks
+
+\hypersetup{
+ colorlinks=true,
+ linkcolor=blue!55!black,
+ citecolor=green!35!black,
+ urlcolor=magenta!55!black,
+ pdftitle={Globalizable Hall Quantisations on Rigid Presentation Fans},
+ pdfauthor={Anonymous research draft}
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\kk}{k}
+\newcommand{\CC}{\mathcal C}
+\newcommand{\MM}{\mathcal M}
+\newcommand{\HH}{\mathcal H}
+\newcommand{\Hall}{\mathcal H}
+\newcommand{\add}{\operatorname{add}}
+\newcommand{\proj}{\operatorname{proj}}
+\newcommand{\modu}{\operatorname{mod}}
+\newcommand{\Mor}{\operatorname{Mor}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Ext}{\operatorname{Ext}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\ind}{\operatorname{ind}}
+\newcommand{\coker}{\operatorname{coker}}
+\newcommand{\Gr}{\operatorname{Gr}}
+\newcommand{\dimv}{\underline{\dim}}
+\newcommand{\Skew}{\operatorname{Skew}}
+\newcommand{\Pres}{\operatorname{Pres}}
+\newcommand{\Cone}{\operatorname{Cone}}
+\newcommand{\Fan}{\mathcal F}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\rad}{\operatorname{rad}}
+\newcommand{\colim}{\operatorname*{colim}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\qchar}{\mathbb X}
+\newcommand{\ThetaMor}{\Theta^{\mathrm{mor}}}
+\newcommand{\Qglob}{\mathfrak Q^{\mathrm{glob}}_T}
+\newcommand{\Hol}{\operatorname{Hol}_T}
+\newcommand{\Id}{\mathrm I}
+
+\IfFileExists{A4_globalisation_results.tex}{\input{A4_globalisation_results.tex}}{
+ \newcommand{\AIVLabeledStates}{1008}
+ \newcommand{\AIVChambers}{42}
+ \newcommand{\AIVOrientedMutations}{4032}
+ \newcommand{\AIVTransferMatrices}{22}
+ \newcommand{\AIVInvariantDimension}{?}
+ \newcommand{\AIVLabeledZeroWalls}{1056}
+ \newcommand{\AIVLabeledTransvections}{2976}
+ \newcommand{\AIVUnlabeledZeroWalls}{22}
+ \newcommand{\AIVUnlabeledTransvections}{62}
+ \newcommand{\AIVCanonicalFullCharts}{?}
+ \newcommand{\AIVLambdaFullCharts}{42}
+ \newcommand{\AIVFullParameterRank}{?}
+ \newcommand{\AIVFullParameterDimension}{?}
+}
+\IfFileExists{cross_rank_results.tex}{\input{cross_rank_results.tex}}{
+ \newcommand{\CrossFullSeedChecks}{?}
+ \newcommand{\CrossSymplecticChecks}{?}
+ \newcommand{\CrossFullPrincipalChecks}{?}
+ \newcommand{\CrossCanonicalMutableChecks}{?}
+ \newcommand{\CrossSingularNoGoWitnesses}{?}
+}
+
+\title[Globalizable Hall quantisations]
+{Globalizable Hall Quantisations on Rigid Presentation Fans:\\
+Symplectic Wall Transvections, Principal-Coefficient Obstructions,\\
+and Universal Kernel Criteria for Cluster-Tilted Algebras}
+
+\author{Anonymous research draft}
+\date{18 August 2026}
+
+\begin{document}
+
+\input{sections/00_abstract}
+\maketitle
+\tableofcontents
+
+\input{sections/01_introduction}
+\input{sections/02_setup}
+\input{sections/03_globalisation}
+\input{sections/04_holonomy}
+\input{sections/05_principal_obstruction}
+\input{sections/06_colimit_critical}
+\input{sections/07_A4_computation}
+\input{sections/08_audit_conclusion}
+\input{sections/09_reproduction}
+\input{references}
+
+\end{document}

@@ -1,0 +1,309 @@
+\section{The fixed-frozen principal obstruction}
+\label{sec:principal-obstruction}
+
+The mutable globalization theorem is valid in every rank.  A full principal
+quantum seed contains an additional frozen lattice, and requiring one fixed
+frozen basis on the Hall side is strictly stronger.  This section gives the
+complete criterion.
+
+\subsection{The enlarged term--frozen lattice}
+
+Let $F\simeq\mathbb Z^n$ be the principal frozen lattice and put
+\[
+ \widehat L=L\oplus F.
+\]
+The frozen basis is fixed once and for all.  For a maximal rigid chart $R$,
+define the lift
+\begin{equation}
+ J_R=
+ \begin{pmatrix}
+  \Xi_R&0\\
+  0&I_n
+ \end{pmatrix}:
+ K\oplus F\longrightarrow L\oplus F.
+ \label{eq:J-R}
+\end{equation}
+The first block sends the mutable seed basis to the reduced exact term classes;
+the second identifies the frozen basis in every chart.
+
+\begin{definition}[Fixed-frozen globalization]
+\label{def:full-globalization}
+Let $S\in\Skew_n(\mathbb Z)$ and $d>0$.  A
+\emph{contractible-radical fixed-frozen globalization} of the affine
+principal quantisation \cref{eq:principal-affine-family} is an integral skew
+form $\widehat{\widetilde\Lambda}_S$ on $\widehat L$ such that:
+\begin{enumerate}[label=(\roman*),leftmargin=2.3em]
+\item $C\oplus0$ lies in its radical;
+\item its pullback along $J_R$ is
+      $\widetilde\Lambda_R(S)$ for every reachable maximal rigid chart $R$.
+\end{enumerate}
+\end{definition}
+
+The condition at the initial chart already determines the form on the
+quotient
+\[
+ \widehat L/(C\oplus0)\simeq K\oplus F.
+\]
+To display it, set
+\begin{equation}
+ C_S:=dI_n+SB_0,
+ \qquad
+ R_S:=dB_0^T+B_0^TSB_0.
+ \label{eq:C-S-R-S}
+\end{equation}
+
+\begin{lemma}[Initial quotient form]
+\label{lem:initial-quotient-full}
+If a fixed-frozen globalization exists, then its quotient form on $K\oplus F$
+is uniquely
+\begin{equation}
+ \overline\Lambda_S=
+ \begin{pmatrix}
+  S&C_S\\
+  -C_S^T&R_S
+ \end{pmatrix}
+ =
+ \begin{pmatrix}
+  S&dI+SB_0\\
+  -dI+B_0^TS&dB_0^T+B_0^TSB_0
+ \end{pmatrix}.
+ \label{eq:quotient-full-form}
+\end{equation}
+The candidate global form is the pullback of
+$\overline\Lambda_S$ along
+\[
+ \widehat D=\begin{pmatrix}D&0\\0&I_n\end{pmatrix}:
+ L\oplus F\longrightarrow K\oplus F.
+\]
+\end{lemma}
+
+\begin{proof}
+At the initial morphism chart,
+$\Delta_0=-I_n$, $G_0=I_n$, and the reduced term lift is the $Z$-boundary.
+Expanding \cref{eq:principal-affine-family} gives
+\[
+ \widetilde\Lambda_0(S)=
+ \begin{pmatrix}
+  S&-dI-SB_0\\
+  dI-B_0^TS&dB_0^T+B_0^TSB_0
+ \end{pmatrix}.
+\]
+The quotient mutable coordinate is the split index, equal to minus the
+$Z$-boundary coordinate.  Conjugating by
+$\operatorname{diag}(-I,I)$ gives exactly
+\cref{eq:quotient-full-form}.  The radical condition forces factorization
+through $\widehat D$, proving uniqueness.
+\end{proof}
+
+\subsection{The complete criterion}
+
+\begin{theorem}[Fixed-frozen principal globalization criterion]
+\label{thm:full-globalization-criterion}
+Let $S\in\Skew_n(\mathbb Z)$.  A contractible-radical fixed-frozen
+globalization exists if and only if, for every reachable maximal rigid chart
+$R$, both
+\begin{align}
+ \Delta_R^TS\Delta_R&=G_R^TSG_R,
+ \label{eq:full-mutable-condition}\\
+ (\Delta_R^T+G_R^T)(dI_n+SB_0)&=0
+ \label{eq:full-mixed-condition}
+\end{align}
+hold.  Equivalently, $S\in\Qglob$ and the mixed-block equations
+\cref{eq:full-mixed-condition} hold.  When it exists, the global form is
+unique and equals
+\begin{equation}
+ \widehat{\widetilde\Lambda}_S
+ =\widehat D^T\overline\Lambda_S\widehat D.
+ \label{eq:full-global-form}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By \cref{lem:initial-quotient-full}, only the form
+\cref{eq:full-global-form} can occur.  Pulling it back along $J_R$ gives
+\begin{equation}
+ J_R^T\widehat{\widetilde\Lambda}_SJ_R
+ =\begin{pmatrix}
+   \Delta_R^TS\Delta_R&\Delta_R^TC_S\\
+   -C_S^T\Delta_R&R_S
+  \end{pmatrix}.
+ \label{eq:actual-full-pullback}
+\end{equation}
+On the other hand, expanding \cref{eq:principal-affine-family} at $R$ gives
+\begin{equation}
+ \widetilde\Lambda_R(S)
+ =\begin{pmatrix}
+   G_R^TSG_R&-G_R^TC_S\\
+   C_S^TG_R&R_S
+  \end{pmatrix}.
+ \label{eq:desired-full-form}
+\end{equation}
+Equality of the upper-left blocks is
+\cref{eq:full-mutable-condition}.  Equality of the upper-right blocks is
+\[
+ \Delta_R^TC_S=-G_R^TC_S,
+\]
+which is \cref{eq:full-mixed-condition}.  The lower-left equation is its
+negative transpose, and the lower-right blocks already agree.  This proves
+necessity and sufficiency.
+\end{proof}
+
+\begin{definition}[Fixed-frozen parameter locus]
+The full fixed-frozen parameter locus is the affine integral set
+\begin{equation}
+ \mathfrak Q_T^{\mathrm{ff}}
+ :=\left\{
+ S\in\Qglob:
+ (\Delta_R^T+G_R^T)(dI+SB_0)=0
+ \text{ for every }R
+ \right\}.
+ \label{eq:Q-ff}
+\end{equation}
+It is cut out by an inhomogeneous integer linear system on the entries of
+$S$.
+\end{definition}
+
+\subsection{Canonical principal no-go and full-rank recovery}
+
+\begin{corollary}[Invertible mixed block]
+\label{cor:invertible-mixed-block}
+If $dI+SB_0$ is invertible over $\mathbb Q$, then a fixed-frozen
+globalization can exist only if
+\begin{equation}
+ \Delta_R=-G_R
+ \label{eq:Delta-minus-G}
+\end{equation}
+for every reachable chart $R$.
+\end{corollary}
+
+\begin{proof}
+Right multiplication of \cref{eq:full-mixed-condition} by
+$(dI+SB_0)^{-1}$ gives
+$\Delta_R^T+G_R^T=0$.
+\end{proof}
+
+\begin{corollary}[Canonical principal fixed-frozen obstruction]
+\label{cor:canonical-full-no-go}
+For the canonical principal parameter $S=0$, the mutable Hall cocycle always
+globalizes by \cref{cor:zero-globalizes}.  The full fixed-frozen principal
+form globalizes if and only if
+\[
+ \Delta_R=-G_R
+\]
+for every reachable chart.  In particular, one chart with
+$\Delta_R\ne-G_R$ is a complete obstruction.
+\end{corollary}
+
+\begin{proof}
+For $S=0$, the matrix $dI+SB_0=dI$ is invertible.  Apply
+\cref{thm:full-globalization-criterion,cor:invertible-mixed-block}.
+\end{proof}
+
+The canonical principal coefficients therefore remove the rank obstruction to
+constructing quantum seeds, and they remove the rank obstruction to a global
+\emph{mutable} Hall cocycle, but they do not automatically produce one fixed
+frozen Hall lattice.
+
+The full-rank compatible parameter behaves differently.
+
+\begin{corollary}[Full-rank fixed-frozen globalization]
+\label{cor:full-rank-full-principal}
+Assume $B_0^T\Lambda_0=dI_n$.  Then
+\[
+ \Lambda_0\in\mathfrak Q_T^{\mathrm{ff}}.
+\]
+More precisely,
+\begin{equation}
+ dI+\Lambda_0B_0=0,
+ \qquad
+ dB_0^T+B_0^T\Lambda_0B_0=0,
+ \label{eq:full-rank-C-zero}
+\end{equation}
+and the quotient form \cref{eq:quotient-full-form} is
+\begin{equation}
+ \overline\Lambda_{\Lambda_0}
+ =\begin{pmatrix}\Lambda_0&0\\0&0\end{pmatrix}.
+ \label{eq:central-frozen-full-form}
+\end{equation}
+Thus the full principal fixed-frozen globalization is the coefficient-free
+term form $D^T\Lambda_0D$ with a central frozen lattice.
+\end{corollary}
+
+\begin{proof}
+Taking transposes in $B_0^T\Lambda_0=dI$ and using skew-symmetry gives
+$\Lambda_0B_0=-dI$.  This proves the first equality in
+\cref{eq:full-rank-C-zero}; the second follows from
+\[
+ B_0^T\Lambda_0B_0=dB_0.
+\]
+The mutable condition is \cref{eq:companion-identity}, while the mixed
+condition is automatic because $C_{\Lambda_0}=0$.  Formula
+\cref{eq:central-frozen-full-form} follows from
+\cref{eq:quotient-full-form}.
+\end{proof}
+
+\begin{remark}[Two distinguished principal gauges]
+The affine principal quantisation space contains two structurally important
+parameters.
+\begin{enumerate}[label=(\roman*),leftmargin=2.3em]
+\item $S=0$ is canonical from the principal-coefficient viewpoint.  It always
+      globalizes mutably but generally requires chamber-dependent frozen
+      identifications.
+\item In full rank, $S=\Lambda_0$ is the coefficient-free gauge.  It
+      globalizes both mutably and with a fixed frozen lattice, but the frozen
+      directions become central.
+\end{enumerate}
+The distinction is invisible if one records only the compatible extended
+exchange matrices; it appears when one asks for a single Hall term lattice.
+\end{remark}
+
+\subsection{The crossed frozen atlas}
+
+When $S\in\Qglob$ but $S\notin\mathfrak Q_T^{\mathrm{ff}}$, the mutable
+chamber algebras are restrictions of the one global Hall twist
+$\star_{\Omega_S}$, whereas the full principal forms must be transported with
+chart-dependent frozen coordinates.  The transition from $R$ to $R'$ acts on
+the quotient mutable lattice by
+\[
+ \mathsf L_{R'}\mathsf L_R^{-1}
+\]
+and on the frozen lattice by the principal coefficient transport encoded by
+the $C$-matrices.  The resulting object is naturally a crossed atlas rather
+than one fixed based quantum torus.
+
+\begin{proposition}[Mutable/frozen separation]
+\label{prop:mutable-frozen-separation}
+For every $S\in\Qglob$:
+\begin{enumerate}[label=(\roman*),leftmargin=2.3em]
+\item one global exact-Hall cocycle controls all compatible rigid products;
+\item the obstruction to one fixed principal frozen lattice is exactly the
+      family of matrices
+      \begin{equation}
+       \mathcal O_R(S)
+       :=(\Delta_R^T+G_R^T)(dI+SB_0);
+       \label{eq:frozen-obstruction-matrix}
+      \end{equation}
+\item $S\in\mathfrak Q_T^{\mathrm{ff}}$ if and only if every
+      $\mathcal O_R(S)$ vanishes.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Part (i) is \cref{thm:globalizable-Hall-theta}; parts (ii) and (iii) are
+\cref{thm:full-globalization-criterion}.
+\end{proof}
+
+\begin{algorithm}[Full principal globalization test]
+\label{alg:full-principal-test}
+For a finite rigid atlas and a chosen compatibility scalar $d$:
+\begin{enumerate}[label=\arabic*.,leftmargin=2.2em]
+\item introduce $\binom n2$ integer unknowns for a skew matrix $S$;
+\item impose the homogeneous equations
+      $\mathsf L_R^TS\mathsf L_R=S$;
+\item impose the affine equations
+      $(\Delta_R^T+G_R^T)(dI+SB_0)=0$;
+\item compute the rational affine solution space and its integral points.
+\end{enumerate}
+The first subsystem computes $\Qglob$; the second cuts out
+$\mathfrak Q_T^{\mathrm{ff}}$.
+\end{algorithm}

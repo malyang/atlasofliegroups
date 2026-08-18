@@ -1,0 +1,223 @@
+\section{Fan holonomy and symplectic wall transvections}
+\label{sec:holonomy}
+
+The invariant-lattice description of \cref{thm:globalization-criterion} is
+global.  This section turns it into an edge-local criterion and identifies the
+full-rank wall maps as symplectic transvections.
+
+\subsection{Rank-one relative transitions}
+
+Let $R$ and $R'$ be adjacent maximal rigid charts.  Their presentation cones
+share a codimension-one face.  Choose the primitive integral covector
+\[
+ \ell_{R\to R'}\in K^*
+\]
+which vanishes on the common wall and is positive on the new ray of $R'$.
+The sign of $\ell$ is fixed by this convention, but the results below are
+unchanged if both $v$ and $\ell$ are negated.
+
+\begin{proposition}[Integral rank-one wall form]
+\label{prop:rank-one-wall}
+For adjacent charts $R,R'$, there is an integral column vector $u$ such that
+\begin{equation}
+ \mathsf L_{R'}-\mathsf L_R=u\ell^T.
+ \label{eq:rank-one-difference}
+\end{equation}
+The relative transition
+\begin{equation}
+ T_{R\to R'}:=\mathsf L_R^{-1}\mathsf L_{R'}
+ \label{eq:relative-transition}
+\end{equation}
+has the form
+\begin{equation}
+ \boxed{T_{R\to R'}=I+v\ell^T,\qquad v=\mathsf L_R^{-1}u\in K.}
+ \label{eq:rank-one-transition}
+\end{equation}
+Moreover
+\begin{equation}
+ \ell^Tv=0,
+ \qquad
+ \det T_{R\to R'}=1.
+ \label{eq:unipotent-wall}
+\end{equation}
+Thus $(T-I)^2=0$.
+\end{proposition}
+
+\begin{proof}
+The two local maps $\mathsf L_R$ and $\mathsf L_{R'}$ agree on their common
+wall, because a weight on that wall has the same rigid direct-sum
+representative and the same cluster $g$-vector in both charts.  Hence
+$\mathsf L_{R'}-\mathsf L_R$ vanishes on $\ker\ell$, so it has rank at most
+one and factors as $u\ell^T$ over $\mathbb Q$.  Since the difference is
+integral and $\ell$ is primitive, Bezout's identity for the entries of
+$\ell$ implies $u\in\mathbb Z^n$.  Multiplying by the unimodular matrix
+$\mathsf L_R^{-1}$ gives \cref{eq:rank-one-transition} with integral $v$.
+
+Along one mutation, both $G_R$ and $\Delta_R$ are multiplied on the right by
+unimodular mutation matrices of determinant $-1$.  Therefore
+\[
+ \det\mathsf L_R=\frac{\det G_R}{\det\Delta_R}
+\]
+is constant on the connected exchange graph.  Hence
+$\det T_{R\to R'}=1$.  The matrix determinant lemma gives
+\[
+ \det(I+v\ell^T)=1+\ell^Tv,
+\]
+so $\ell^Tv=0$.  Finally
+$(v\ell^T)^2=v(\ell^Tv)\ell^T=0$.
+\end{proof}
+
+\begin{remark}
+The vector $v$ is the shear direction and $\ell$ is the wall normal.  The
+condition $\ell^Tv=0$ says that the shear direction lies in the wall itself.
+Zero-shear edges are precisely those for which $v=0$, equivalently
+$\mathsf L_R=\mathsf L_{R'}$.
+\end{remark}
+
+\subsection{The symplectic criterion}
+
+\begin{theorem}[Rank-one preservation criterion]
+\label{thm:rank-one-symplectic}
+Let $S\in\Skew_n(\mathbb Z)$ and let
+\[
+ T=I+v\ell^T\in\mathrm{GL}_n(\mathbb Z),
+ \qquad \ell^Tv=0,
+\]
+with $\ell$ primitive and nonzero.  Then
+\begin{equation}
+ \boxed{
+ T^TST=S
+ \quad\Longleftrightarrow\quad
+ Sv=c\ell\text{ for some }c\in\mathbb Z.}
+ \label{eq:symplectic-transvection-criterion}
+\end{equation}
+If $S$ is nondegenerate and $v\ne0$, then $c\ne0$.
+\end{theorem}
+
+\begin{proof}
+Since $S$ is skew-symmetric, $v^TSv=0$.  Expanding gives
+\begin{align*}
+ T^TST-S
+ &=\ell v^TS+Sv\ell^T+\ell(v^TSv)\ell^T\\
+ &=-\ell(Sv)^T+(Sv)\ell^T.
+\end{align*}
+This vanishes exactly when the two column vectors $Sv$ and $\ell$ are
+proportional over $\mathbb Q$.  Because both are integral and $\ell$ is
+primitive, the proportionality scalar is an integer.  If $S$ is
+nondegenerate and $v\ne0$, then $Sv\ne0$, so the scalar is nonzero.
+\end{proof}
+
+\begin{definition}[Integral $S$-transvection]
+A nonidentity matrix of the form
+\[
+ I+v\ell^T,
+ \qquad \ell^Tv=0,
+ \qquad Sv=c\ell,
+\]
+is called an \emph{integral $S$-transvection}.  When $S$ is nondegenerate,
+this is a symplectic transvection for the integral symplectic lattice
+$(K,S)$.
+\end{definition}
+
+\begin{corollary}[Edge-local globalization test]
+\label{cor:edge-local-test}
+A skew form $S$ is globalizable if and only if it is preserved by the relative
+transition of every oriented edge in a connected spanning set of the
+reachable exchange graph.  For a nonzero rank-one edge this is equivalent to
+\[
+ Sv_{R\to R'}\in\mathbb Z\ell_{R\to R'}.
+\]
+Thus $\Qglob$ is obtained by intersecting elementary wall conditions.
+\end{corollary}
+
+\begin{proof}
+The relative edge transitions generate the transfer group $\Hol$.  Apply
+\cref{thm:globalization-criterion,thm:rank-one-symplectic}.
+\end{proof}
+
+\subsection{Piecewise symplecticity in full rank}
+
+\begin{theorem}[Symplectic presentation-to-cluster transport]
+\label{thm:piecewise-symplectic}
+Assume $B_0^T\Lambda_0=dI_n$.  Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item every chamber transfer is integral symplectic,
+      \begin{equation}
+       \mathsf L_R^T\Lambda_0\mathsf L_R=\Lambda_0;
+       \label{eq:piecewise-symplectic}
+      \end{equation}
+\item every nonzero adjacent relative transition is an integral
+      $\Lambda_0$-transvection;
+\item the fan map $\Gamma_T$ is piecewise integral symplectic, and its
+      nonlinearity across a wall is completely determined by the pair
+      $(v_{R\to R'},\ell_{R\to R'})$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Part (i) is \cref{cor:full-rank-globalizes} rewritten through
+\cref{thm:globalization-criterion}.  Relative transitions of symplectic
+matrices are symplectic.  Apply
+\cref{prop:rank-one-wall,thm:rank-one-symplectic} to obtain (ii).  Part (iii)
+is the chamberwise interpretation of (i) and (ii).
+\end{proof}
+
+\begin{remark}[Comparison with tropical duality]
+Tropical duality relates the $G$- and $C$-matrices of one cluster pattern
+\cite{NakanishiZelevinsky}.  The matrix $\mathsf L_R=G_R\Delta_R^{-1}$
+compares two different but object-labelled patterns: the cluster $g$-chart and
+the split presentation chart.  The symplectic theorem is therefore not a
+restatement of $G_R^TC_R=I$; it uses the suspended companion seed and the
+quantum compatibility form.
+\end{remark}
+
+\subsection{Holonomy, zero-shear components and invariant forms}
+
+The edge description gives a useful geometric decomposition.  Remove every
+nonzero-shear edge from the maximal-rigid exchange graph.  On each remaining
+connected component, all matrices $\mathsf L_R$ are equal, so $\Gamma_T$ is
+represented by one integral matrix.  We call these the \emph{linearity
+components}.  Contracting each component yields a graph whose edges are
+rank-one transvections.  The transfer group is generated by these contracted
+edge maps.
+
+\begin{proposition}[Invariant forms as holonomy fixed points]
+\label{prop:holonomy-fixed}
+Let $\mathcal G$ be the contracted graph of linearity components and choose a
+spanning tree.  Then $\Qglob$ is the intersection of:
+\begin{enumerate}[label=(\roman*),leftmargin=2.3em]
+\item the fixed lattices of the transvections on the spanning tree; and
+\item the fixed lattices of the cycle holonomies corresponding to the
+      non-tree edges.
+\end{enumerate}
+In particular, if the transvections associated with a generating edge set
+force a one-dimensional rational invariant space, then every globalizable
+integral parameter is an integral multiple of one primitive skew form.
+\end{proposition}
+
+\begin{proof}
+Choose a base component.  Products along the spanning tree recover the
+transfer of every vertex from the base.  Each non-tree edge adds one generator
+of the fundamental group and hence one cycle holonomy.  A form is fixed by all
+vertex transfers exactly when it is fixed by this generating set.  The final
+statement follows by intersecting the rational invariant line with the
+integral skew lattice.
+\end{proof}
+
+\begin{algorithm}[Computing the globalization lattice]
+\label{alg:globalization-lattice}
+Given a finite paired presentation/cluster atlas:
+\begin{enumerate}[label=\arabic*.,leftmargin=2.2em]
+\item compute $\Delta_R,G_R$ and
+      $\mathsf L_R=G_R\Delta_R^{-1}$ for every maximal rigid chart;
+\item deduplicate equal transfer matrices and assemble the integer equations
+      $\mathsf L_R^TS\mathsf L_R-S=0$ on the
+      $\binom n2$ upper-triangular entries of $S$;
+\item compute the rational nullspace and saturate it in
+      $\Skew_n(\mathbb Z)$;
+\item independently factor every adjacent transition as
+      $I+v\ell^T$ and verify the equivalent wall equations
+      $Sv\in\mathbb Z\ell$.
+\end{enumerate}
+The two computations provide independent certificates of the same lattice.
+\end{algorithm}

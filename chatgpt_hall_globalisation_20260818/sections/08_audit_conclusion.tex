@@ -1,0 +1,207 @@
+\section{Proof audit, literature boundary and conclusion}
+\label{sec:audit}
+
+This section separates source results, imported theorems, new proofs and
+finite certificates.  The distinction is essential because the paper combines
+exact categories, $\tau$-tilting theory, quantum cluster algebras and Hall
+integration.
+
+\subsection{What is taken from the source morphism-category paper}
+
+Li proves the indecomposable-object framework in
+$\Mor(\proj A)$, the correspondence between maximal rigid morphism objects and
+support $\tau$-tilting pairs, completion of rigid objects, the
+$2|A|$ count for basic maximal rigid objects including contractibles, and the
+exchange-graph isomorphism \cite{Li}.  These are inputs.  The source paper does
+not contain the homology normal form, the exact term-lattice Euler form, the
+presentation-to-cluster fan transport, the quantum theta reconstruction or the
+globalization and holonomy results proved here.
+
+\subsection{Imported structural theorems}
+
+The following ingredients are used with citation.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item AIR supplies the support $\tau$-tilting/two-term silting
+      correspondence and completion of presilting objects \cite{AIR}.
+\item Demonet--Iyama--Jasso supply unimodular two-term silting cones and
+      completeness in the $\tau$-tilting finite case \cite{DIJ}.
+\item Derksen--Fei supply presentation spaces, generic $E$-invariants and
+      canonical decompositions \cite{DerksenFei}.
+\item Palu and Plamondon supply the classical cluster-character and generic-
+      character framework \cite{Palu,PlamondonGeneric}.
+\item Nakanishi--Zelevinsky supply tropical duality for $G$- and $C$-matrices
+      \cite{NakanishiZelevinsky}.
+\item Berenstein--Zelevinsky supply quantum seed mutation
+      \cite{BZ}; Gellert--Lampe supply the general quantisation-space
+      perspective \cite{GellertLampe}.
+\item Davison--Mandel identify a quantum theta function in a cluster chamber
+      with the normalized quantum cluster monomial and prove positive theta
+      multiplication \cite{DavisonMandel}.
+\item Zhang supplies the standard exact Hall integration used before the
+      bicharacter twist \cite{ZhangFixedSize}.
+\item Keller--Yang, Bridgeland and Davison supply the mutation-covariant
+      $3$-Calabi--Yau and cohomological wall-crossing background
+      \cite{KellerYang,BridgelandScattering,Davison}.
+\end{enumerate}
+
+Recent work describes the $\tau$-cluster morphism category directly from the
+wall-and-chamber geometry of an algebra
+\cite{SchrollTattarTreffingerWilliams}.  This supports the geometric relevance
+of the transfer group, but it does not state the Hall-cocycle globalization
+criterion of \cref{thm:globalization-criterion}.
+
+\subsection{Direct proofs in this paper}
+
+The following assertions are proved directly here.
+\begin{enumerate}[label=(\Alph*),leftmargin=2.5em]
+\item A contractible-radical term form with initial boundary parameter $S$ is
+      uniquely $D^TSD$.
+\item Its restrictions reproduce all mutable quantum chamber forms if and
+      only if $S$ is fixed by every presentation-to-cluster transfer.
+\item The globalizable parameters form the holonomy invariant lattice
+      $\Qglob$ and are computed by a homogeneous integer linear system.
+\item The canonical principal parameter $S=0$ gives one global mutable Hall
+      cocycle in arbitrary rank.
+\item Adjacent relative transfers are unipotent rank-one shears
+      $I+v\ell^T$ with $\ell^Tv=0$.
+\item Such a shear preserves $S$ exactly when $Sv$ is an integral multiple of
+      the primitive wall covector.
+\item Full-rank compatible transfers are integral symplectic and their
+      nonzero walls are symplectic transvections.
+\item A full fixed-frozen principal globalization exists exactly when the
+      mutable invariance and the mixed equation
+      $(\Delta_R^T+G_R^T)(dI+SB_0)=0$ both hold.
+\item The canonical $S=0$ full fixed-frozen no-go and the full-rank
+      $S=\Lambda_0$ recovery follow as exact corollaries.
+\item The universal rigid-face colimit admits a global Hall-to-theta quotient
+      exactly when $\ker\pi_{\mathrm H}\subseteq\ker\pi_\vartheta$.
+\item Initial normalization plus one-step mutation covariance uniquely
+      recognizes the integrated critical assignment on every reachable rigid
+      morphism.
+\end{enumerate}
+
+The earlier homology normal form, orbit-normal-space theorem, fan--orbit
+equivalence and local Hall--theta chamber isomorphism are retained as proved
+inputs from the previous unified iteration; they are summarized in
+\cref{sec:setup} so the new arguments are self-contained at the level of
+lattice and Hall multiplication.
+
+\subsection{Finite certificates}
+
+The two new Python verifiers are deterministic.  The $A_4$ verifier computes
+the complete finite paired atlas, the invariant skew lattice, all wall
+factorizations, and the full fixed-frozen parameter space.  The cross-rank
+verifier samples mutation prefixes for four full-rank matrices and two
+singular matrices.  Both use SymPy exact arithmetic and stop on the first
+failed assertion.
+
+A finite certificate is not a proof of an arbitrary-rank theorem.  Its role is
+to audit signs, transpose conventions, rank-one factors, affine constants and
+implementation consistency.  The arbitrary-rank statements are proved before
+the example.
+
+\subsection{Literature positioning}
+
+Direct Hall realizations of quantum cluster algebras from morphism categories
+are established in acyclic hereditary settings
+\cite{DingXuZhang,FuPengZhang}.  Chen--Hu's 2026 quantum Weyl relations for
+two-term complexes also assume a Dynkin path algebra \cite{ChenHu}.  Contu's
+semi-derived Hall quantum cluster structure concerns bounded projective
+complexes over a representation-finite path algebra \cite{Contu}.  The present
+scope is different: the exact morphism category may come from a
+nonhereditary cluster-tilted algebra, and the result is a globalizable
+bicharacter criterion with exact chamber algebra charts, not a global quantum
+cluster algebra structure on all Hall basis elements.
+
+Gellert--Lampe classify quantisation spaces under full-rank hypotheses
+\cite{GellertLampe}.  The invariant lattice $\Qglob$ is not offered as a
+replacement for that theory.  It solves a different comparison problem: which
+principal quantisation parameters can be pulled back through every
+presentation-to-cluster fan chart to one exact Hall term form.  The answer is
+the fixed lattice of the transfer group.
+
+The literature search used for this draft found no source combining the
+following four statements in one theorem:
+\[
+ \text{holonomy-fixed quantisation parameters},
+ \quad
+ \text{rank-one symplectic wall criterion},
+ \quad
+ \text{fixed-frozen mixed obstruction},
+ \quad
+ \text{Hall/theta kernel factorization}.
+\]
+This is a limited search result, not an absolute priority claim.  A formal
+submission should undergo a wider MathSciNet, zbMATH and citation-chain review.
+
+\subsection{Remaining questions}
+
+The preceding iterations and the present paper leave the following concrete
+problems.
+\begin{enumerate}[label=(\arabic*),leftmargin=2.4em]
+\item Prove the kernel inclusion
+      $\ker\pi_{\mathrm H}\subseteq\ker\pi_\vartheta$, or construct an
+      explicit counterexample.  This is the exact algebraic form of the
+      incompatible-product problem.
+\item Construct a multiplicative filtration or completion in the direction of
+      \cref{conj:codimension-filtration}, and identify its positive-degree
+      pieces with critical or cohomological Hall strata.
+\item Construct a canonical framed critical Hall/Donaldson--Thomas class
+      $\Xi_T(f)$ for each reachable rigid projective morphism.  By
+      \cref{cor:critical-reduction}, only initial normalization and mutation
+      covariance remain to identify its integration.
+\item Determine $\Qglob$ and $\mathfrak Q_T^{\mathrm{ff}}$ for broad infinite
+      families, and relate the transfer group to cluster modular groups and
+      scattering fan monodromy.
+\item Understand whether non-complete $\tau$-tilting fans necessarily have
+      rational or integral weights outside their support.  The real
+      incompleteness statement alone does not imply this arithmetic conclusion.
+\item Build general software which derives minimal presentations, second
+      syzygies, support-$\tau$-tilting charts and map-orbit strata directly
+      from an arbitrary bound quiver.
+\end{enumerate}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+The exact Hall term lattice and the cluster lattice carry different
+information.  The term lattice retains the projective source and target but
+forgets the differential after canonical integration.  Rigid-open-orbit
+geometry recovers the unique differential on the rigid locus.  The split
+index then locates a presentation-fan point, and the piecewise map
+$\Gamma_T$ supplies the cluster $g$-vector and theta label.
+
+The present paper identifies the precise extra datum needed for
+multiplication.  A principal quantisation parameter $S$ is compatible with
+one global exact Hall cocycle if and only if
+\[
+ \mathsf L_R^TS\mathsf L_R=S
+\]
+for every rigid chamber.  The global term form is then forced to be
+$D^TSD$, and the cocycle-corrected Hall multiplication agrees with quantum
+theta multiplication on every compatibility cone.  The zero parameter always
+works, so singular rank is not an obstruction to a global canonical mutable
+cocycle.  Full rank supplies a nondegenerate invariant form and makes the
+fan transport piecewise symplectic.
+
+The frozen directions reveal a genuinely stronger obstruction.  A fixed
+principal frozen lattice exists exactly when
+\[
+ (\Delta_R^T+G_R^T)(dI+SB_0)=0
+\]
+in addition to mutable invariance.  The canonical parameter usually fails
+this test, while the full-rank coefficient-free parameter makes the frozen
+block central and succeeds.  This explains why principal quantum seeds can be
+transported globally even when no one fixed-frozen Hall term form realizes all
+of them.
+
+Finally, the universal face colimit isolates incompatible products as the
+kernel inclusion
+\[
+ \ker\pi_{\mathrm H}\subseteq\ker\pi_\vartheta.
+\]
+The exact Hall algebra and the quantum theta algebra are therefore no longer
+separated by an unspecified ``missing map'': the missing theorem is an
+explicit comparison of two relation ideals, together with a geometric
+construction of the critical class whose integrated value is already forced
+by mutation recognition.

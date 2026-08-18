@@ -1,0 +1,262 @@
+\section{The nonhereditary cluster-tilted \texorpdfstring{$A_4$}{A4} certificate}
+\label{sec:A4}
+
+We apply the preceding theorems to the running nonhereditary example and then
+record cross-rank regressions.  Every computation uses exact integer or
+rational arithmetic.
+
+\subsection{The algebra and its quantum seed}
+
+Let
+\begin{equation}
+ Q:\quad
+ 1\xrightarrow a2\xrightarrow b4\xrightarrow c3\xrightarrow d2,
+ \qquad
+ A=\kk Q/(bc,cd,db).
+ \label{eq:A4-algebra}
+\end{equation}
+This is a cluster-tilted algebra of Dynkin type $A_4$.  In the natural
+morphism seed, the actual exchange matrix is
+\begin{equation}
+ B_0=
+ \begin{pmatrix}
+ 0&-1&0&0\\
+ 1&0&1&-1\\
+ 0&-1&0&1\\
+ 0&1&-1&0
+ \end{pmatrix}.
+ \label{eq:A4-B0}
+\end{equation}
+It has determinant $1$, and
+\begin{equation}
+ \Lambda_0=(B_0^T)^{-1}
+ =\begin{pmatrix}
+ 0&-1&-1&-1\\
+ 1&0&0&0\\
+ 1&0&0&1\\
+ 1&0&-1&0
+ \end{pmatrix},
+ \qquad
+ B_0^T\Lambda_0=I_4.
+ \label{eq:A4-Lambda0}
+\end{equation}
+
+The verifier mutates the pattern for $B_0$ and the paired presentation pattern
+for $-B_0$ in lockstep.  It obtains
+\[
+ \AIVLabeledStates\text{ labelled paired states},
+ \qquad
+ \AIVChambers\text{ unlabelled maximal rigid chambers},
+\]
+with \AIVOrientedMutations\ oriented mutations.  The local transfer matrices
+$\mathsf L_R=G_R\Delta_R^{-1}$ assume
+\AIVTransferMatrices\ distinct values.
+
+\subsection{The invariant skew lattice}
+
+For every distinct transfer matrix, the code imposes
+\[
+ \mathsf L_R^TS\mathsf L_R-S=0
+\]
+on the six upper-triangular entries of a general $4\times4$ skew matrix.  The
+resulting rational invariant space has dimension
+\begin{equation}
+ \boxed{\AIVInvariantDimension.}
+ \label{eq:A4-invariant-dimension}
+\end{equation}
+The JSON certificate records a primitive integral basis and the coordinates
+of $\Lambda_0$ in that basis.  Independently, the program verifies at every
+chamber that
+\begin{equation}
+ \Delta_R^T\Lambda_0\Delta_R
+ =G_R^T\Lambda_0G_R,
+ \label{eq:A4-global-Lambda}
+\end{equation}
+and that the zero parameter satisfies the same identity.  Thus both the
+canonical principal mutable cocycle and the coefficient-free cocycle are
+global.
+
+The code also selects a standard skew basis vector which is not fixed by the
+transfer group.  This is a concrete witness that arbitrary principal gauges
+do not globalize: the obstruction is nontrivial even in finite type.
+
+\subsection{All wall transitions}
+
+For each of the \AIVOrientedMutations\ oriented labelled edges, the verifier
+forms
+\[
+ T_{R\to R'}=\mathsf L_R^{-1}\mathsf L_{R'}.
+\]
+It finds
+\[
+ \AIVLabeledZeroWalls\text{ zero shears},
+ \qquad
+ \AIVLabeledTransvections\text{ nonzero rank-one walls}.
+\]
+After quotienting by labelled multiplicity, the $84$ exchange edges split as
+\begin{equation}
+ \boxed{
+ \AIVUnlabeledZeroWalls\text{ zero-shear edges}
+ \quad\text{and}\quad
+ \AIVUnlabeledTransvections\text{ genuine transvection edges}.}
+ \label{eq:A4-wall-counts}
+\end{equation}
+At every nonzero wall it verifies, with a primitive factorization
+$T-I=v\ell^T$,
+\[
+ \ell^Tv=0,
+ \qquad
+ \Lambda_0v=c\ell,
+ \qquad
+ T^T\Lambda_0T=\Lambda_0.
+\]
+This is a complete finite certificate for
+\cref{thm:piecewise-symplectic} in the $A_4$ atlas.
+
+\subsection{The full fixed-frozen affine system}
+
+The full fixed-frozen test introduces six skew unknowns and imposes both
+\[
+ \Delta_R^TS\Delta_R=G_R^TSG_R
+\]
+and
+\[
+ (\Delta_R^T+G_R^T)(I+SB_0)=0
+\]
+for all $42$ chambers.  Its coefficient matrix has rank
+\AIVFullParameterRank, and the affine solution space has dimension
+\AIVFullParameterDimension.  The verifier proves that the unique solution is
+\begin{equation}
+ \boxed{S=\Lambda_0.}
+ \label{eq:A4-unique-full-parameter}
+\end{equation}
+Accordingly, the full fixed-frozen form associated with $S=\Lambda_0$ agrees
+in all \AIVLambdaFullCharts\ chambers, while the canonical principal choice
+$S=0$ agrees in only \AIVCanonicalFullCharts\ chambers.
+
+This distinction can already be seen on one indecomposable object.  Consider
+\begin{equation}
+ C_{S_2}=(P_4\xrightarrow{\rho_b}P_2).
+ \label{eq:A4-CS2}
+\end{equation}
+Its homology is
+\[
+ H^{-1}(C_{S_2})\simeq S_3=\Omega_A^2S_2,
+ \qquad
+ H^0(C_{S_2})\simeq S_2,
+\]
+so the shifted-projective residue vanishes.  Its split index and cluster
+$g$-vector are
+\begin{equation}
+ \delta=I(C_{S_2})=(0,1,0,-1)^T,
+ \qquad
+ g_T(C_{S_2})=(1,-1,1,0)^T.
+ \label{eq:A4-delta-g}
+\end{equation}
+Thus $\delta\ne-g$.  By \cref{cor:canonical-full-no-go}, this one chart rules
+out a full fixed-frozen canonical principal form.  On the other hand,
+$I+\Lambda_0B_0=0$, so the $S=\Lambda_0$ mixed obstruction vanishes.
+
+The classical morphism character is
+\begin{equation}
+ CC_T^{\mathrm{mor}}(C_{S_2})
+ =\frac{z_1z_3+z_4}{z_2},
+ \label{eq:A4-classical-variable}
+\end{equation}
+and the corresponding quantum theta function is
+\begin{equation}
+ \vartheta_{(1,-1,1,0)}
+ =X^{e_1-e_2+e_3}+X^{e_4-e_2}.
+ \label{eq:A4-quantum-variable}
+\end{equation}
+The new globalization results do not alter this object-level formula; they
+explain which one global Hall cocycle reproduces its multiplication with all
+compatible rigid objects.
+
+\subsection{Exact Hall interpretation}
+
+The exact Hall commutator in the ordinary Ringel basis constructs the
+nonzero differential:
+\begin{equation}
+ [Z_4][U_2]-[U_2][Z_4]=[C_{S_2}].
+ \label{eq:A4-exact-Hall}
+\end{equation}
+The zero and nonzero maps $P_4\to P_2$ have the same exact term class, but the
+zero map has one-dimensional self-extension space while $C_{S_2}$ is rigid.
+The open-orbit theorem selects the nonzero map.  The global cocycle then
+corrects its split products, and the fan transport supplies the theta label.
+The pipeline is therefore
+\[
+ \text{exact Hall differential}
+ \longrightarrow
+ \text{rigid open orbit}
+ \longrightarrow
+ I(f)
+ \longrightarrow
+ \Gamma_T(I(f))
+ \longrightarrow
+ \vartheta_{\Gamma_T(I(f))}.
+\]
+No step may be omitted: exact integration alone forgets the differential,
+and the split index alone does not determine the cluster $g$-vector without
+the piecewise fan chart.
+
+\subsection{Cross-rank regression}
+
+The second verifier tests four full-rank initial matrices in ranks $2,4,4,6$
+and singular path matrices in ranks $3,5$.  It checks
+\CrossFullSeedChecks\ full-rank seed prefixes,
+\CrossSymplecticChecks\ adjacent symplectic transitions,
+and \CrossFullPrincipalChecks\ full fixed-frozen identities.  Across all
+families it performs \CrossCanonicalMutableChecks\ canonical mutable
+globalization checks.  In the singular families it records
+\CrossSingularNoGoWitnesses\ mutated prefixes witnessing failure of the
+canonical full fixed-frozen condition.
+
+The regression has two purposes.  First, it checks that the formulas do not
+silently depend on type $A_4$ or on invertibility.  Second, it separates three
+claims which can otherwise be confused:
+\begin{enumerate}[label=(\roman*),leftmargin=2.3em]
+\item $S=0$ mutably globalizes in every rank;
+\item a full-rank compatible form is fixed by every transfer and globalizes
+the whole fixed-frozen form;
+\item the canonical $S=0$ full fixed-frozen form generally fails after
+mutation, in both full and singular rank.
+\end{enumerate}
+
+\begin{table}[t]
+\centering
+\caption{Deterministic globalization certificates.}
+\label{tab:certificates}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Check & Count/result\\
+\midrule
+Labelled paired $A_4$ states & \AIVLabeledStates\\
+Unlabelled $A_4$ rigid chambers & \AIVChambers\\
+Distinct $A_4$ transfer matrices & \AIVTransferMatrices\\
+Oriented $A_4$ wall checks & \AIVOrientedMutations\\
+Nonzero labelled symplectic transvections & \AIVLabeledTransvections\\
+Invariant skew-space dimension & \AIVInvariantDimension\\
+Full fixed-frozen affine dimension & \AIVFullParameterDimension\\
+Cross-rank full seed-prefix checks & \CrossFullSeedChecks\\
+Cross-rank canonical mutable checks & \CrossCanonicalMutableChecks\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{What the certificate proves and what it does not}
+
+The finite computations certify:
+\begin{itemize}[leftmargin=2em]
+\item exact enumeration of the finite paired $A_4$ atlas;
+\item the invariant skew lattice and its primitive basis;
+\item every rank-one wall factorization and symplectic identity;
+\item the complete fixed-frozen affine system;
+\item the explicit $C_{S_2}$ obstruction and the unique global parameter;
+\item independent cross-rank instances of all matrix identities.
+\end{itemize}
+They do not compute vanishing-cycle cohomology, broken lines, arbitrary
+Krull--Schmidt decompositions or the kernels in
+\cref{thm:kernel-criterion}.  Those remain mathematical or geometric inputs
+outside the finite certificate.

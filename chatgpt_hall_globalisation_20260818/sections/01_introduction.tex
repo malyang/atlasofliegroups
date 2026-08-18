@@ -1,0 +1,230 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Let $A$ be a finite-dimensional algebra and let
+\[
+ \MM=\Mor(\proj A)
+\]
+be the exact category whose objects are morphisms between finitely generated
+projective right $A$-modules and whose conflations are degreewise split short
+exact sequences.  Bautista's analysis of this category shows that it is
+Krull--Schmidt and hereditary as an exact category, even when $A$ itself has
+infinite global dimension \cite{Bautista}.  Li proved that its basic maximal
+rigid objects are
+\[
+ C_M\oplus Z_P\oplus K_A
+\]
+for basic support $\tau$-tilting pairs $(M,P)$, that every rigid object can be
+completed, and that the maximal-rigid exchange graph is the support-$\tau$-
+tilting graph \cite{Li}.  These results make $\MM$ a natural exact model for
+two-term silting combinatorics beyond the hereditary case.
+
+The Hall and cluster structures carried by this model are nevertheless
+subtle.  For a finite acyclic quiver, Ding--Xu--Zhang and Fu--Peng--Zhang
+construct direct morphism-Hall realizations of quantum cluster algebras
+\cite{DingXuZhang,FuPengZhang}.  Zhang's fixed-size complex construction gives
+the general exact integration needed for $\Mor(\proj A)$ over a finite field
+\cite{ZhangFixedSize}.  However, the canonical exact integration records the
+source and target projective terms, not the differential.  For a
+nonhereditary cluster-tilted algebra, different maps with the same terms can
+have different homology, self-extension spaces and cluster variables.  This
+is the differential-blindness phenomenon isolated in the preceding
+iteration of this project.
+
+The same preceding work established a compensating rigidity theorem.  In a
+fixed affine presentation space
+\[
+ \Pres(P^-,P^0)=\Hom_A(P^-,P^0),
+\]
+the normal space to the base-change orbit of a map $f$ is
+$\Ext^1_{\MM}(F_f,F_f)$.  Hence rigid maps are exactly the open orbits, and
+there is at most one rigid isomorphism class with fixed terms.  Full morphism
+homology recovers the reduced object and its split index.  On the union of
+rigid-open-orbit cones, this gives a piecewise-unimodular transport
+\[
+ \Gamma_T:\lvert\Fan_\tau(A)\rvert_{\mathrm{reach}}
+ \longrightarrow
+ \lvert\Fan_{\mathrm{cl}}(T)\rvert
+\]
+from the two-term presentation fan to the cluster $g$-fan.  Davison--Mandel's
+quantum theta theorem then assigns the path-independent quantum element
+\[
+ \ThetaMor_{T,q}(\delta)
+ =\vartheta_{\Gamma_T(\delta)}
+\]
+to every rigid presentation weight \cite{DavisonMandel}.  The geometric
+importance of walls and chambers in $\tau$-tilting theory has also been
+emphasized recently in the construction of the $\tau$-cluster morphism
+category \cite{SchrollTattarTreffingerWilliams}.
+
+The last iteration promoted this object-level reconstruction to
+multiplication when the mutable exchange matrix $B_0$ is invertible.  Let
+$K=K_0^{\mathrm{sp}}(\proj A)$ and
+$L=K\oplus K=K_0(\MM)$, and write
+\[
+ D=(-I\ I):L\longrightarrow K,
+ \qquad D(p,q)=q-p.
+\]
+If $B_0^T\Lambda_0=dI$, the term-lattice form
+\[
+ \widehat\Lambda_T=D^T\Lambda_0D
+\]
+corrects the exact skew Euler form $\Lambda_{\MM}$.  Twisting the Hall product
+by the resulting bicharacter is associative on the whole exact Hall algebra,
+and on every rigid chamber it is isomorphic to the quantum affine-space
+algebra of cluster monomials.  The proof used full-rank uniqueness: two
+compatible skew forms for the same invertible exchange matrix must coincide.
+The singular-rank case was left as a collection of chamberwise forms.
+
+The present paper shows that full-rank uniqueness was convenient but not the
+correct organizing principle.  The correct invariant is the holonomy of the
+piecewise-unimodular presentation-to-cluster transport.
+
+\subsection*{The transfer group and globalizable quantisations}
+
+Let
+\[
+ R=f_1\oplus\cdots\oplus f_n
+\]
+be a reachable ordered basic reduced maximal rigid morphism object.  Its two
+integral bases are
+\[
+ \Delta_R=(I(f_1)\ \cdots\ I(f_n)),
+ \qquad
+ G_R=(g_T(f_1)\ \cdots\ g_T(f_n)).
+\]
+Both matrices are unimodular.  We define the chamber transfer
+\[
+ \mathsf L_R=G_R\Delta_R^{-1}\in\mathrm{GL}_n(\mathbb Z).
+\]
+It is the local matrix of $\Gamma_T$.
+
+The complete affine family of principal-compatible quantum forms is
+parameterized by an initial integral skew form $S$.  Its mutable block in the
+cluster chart $R$ is
+\[
+ \Lambda_R^{\mathrm{mut}}(S)=G_R^TSG_R.
+\]
+On the Hall side, a global target form which kills contractible classes and
+has initial boundary value $S$ is forced to be
+\[
+ D^TSD.
+\]
+Its restriction to the reduced term lifts of the chamber is
+$\Delta_R^TS\Delta_R$.  Equality of the Hall and cluster exponents is
+therefore equivalent to
+\[
+ \mathsf L_R^TS\mathsf L_R=S.
+\]
+This gives the fixed lattice
+\[
+ \Qglob
+ =\{S\in\Skew_n(\mathbb Z):
+       \mathsf L_R^TS\mathsf L_R=S\text{ for all reachable }R\}.
+\]
+The result both generalizes and sharpens the full-rank theorem.  It gives a
+necessary and sufficient condition, not merely a construction.
+
+The zero form belongs to $\Qglob$ for every exchange matrix.  It corresponds
+to the canonical principal-coefficient quantisation, whose mutable--mutable
+block is zero at every seed.  Thus one global exact-Hall cocycle exists for
+the canonical principal atlas in every rank.  In the full-rank
+coefficient-free situation, the compatible form $\Lambda_0$ also belongs to
+$\Qglob$, recovering the earlier result.  More generally, the dimension and
+integral basis of $\Qglob$ are computable by a finite exact linear system
+whenever a finite rigid atlas is available.  This is a fan-holonomy form of
+the quantisation-space problem studied by Gellert--Lampe
+\cite{GellertLampe}.
+
+\subsection*{Symplectic wall transvections}
+
+Adjacent chamber maps agree on their common codimension-one face.  Their
+difference has rank at most one.  After passing to a relative transition, we
+prove the integral normal form
+\[
+ T=I+v\ell^T,
+ \qquad \ell^Tv=0,
+\]
+where $\ell$ is the primitive covector vanishing on the wall.  For any skew
+form $S$,
+\[
+ T^TST=S
+ \quad\Longleftrightarrow\quad
+ Sv=c\ell
+ \quad(c\in\mathbb Z).
+\]
+This is an edge-local globalization test.  When $S$ is nondegenerate, every
+nonzero wall preserving $S$ is an integral symplectic transvection.  In
+particular, the full-rank presentation-to-cluster map is not merely
+piecewise-unimodular: it is piecewise symplectic.
+
+\subsection*{Mutable globalization versus frozen globalization}
+
+The canonical principal coefficient matrix exists in every rank, but it
+contains frozen directions.  A single global form on the enlarged Hall term
+lattice with a fixed frozen basis is a stronger requirement than globalizing
+its mutable block.  We derive the exact additional equation
+\[
+ (\Delta_R^T+G_R^T)(dI+SB_0)=0.
+\]
+This yields a sharp dichotomy.  For the canonical principal parameter $S=0$,
+the mutable cocycle always globalizes, whereas the full fixed-frozen form
+globalizes only if $\Delta_R=-G_R$ in every chamber.  In a genuine nontrivial
+atlas this normally fails.  In the scalar-compatible full-rank case,
+$S=\Lambda_0$ satisfies $dI+\Lambda_0B_0=0$, so the mixed obstruction
+vanishes and the whole fixed-frozen form globalizes.  Its frozen directions
+are central.  Thus ``principal coefficients remove the rank obstruction'' and
+``one fixed frozen Hall lattice realizes every seed'' are different
+statements; the first is true, the second is governed by the equation above.
+
+\subsection*{Incompatible products as a kernel problem}
+
+The cocycle-corrected Hall-to-theta map is an algebra isomorphism on each
+rigid chamber and agrees on common faces.  It is not known to extend to
+products of incompatible rigid objects, whose Hall products contain nonsplit
+and often non-rigid middle terms.  We replace this vague obstruction by a
+universal criterion.  Let $\mathscr U_T$ be the colimit of the rigid face
+algebras.  It maps to the subalgebra generated by rigid classes in the twisted
+exact Hall algebra and also to the reachable quantum theta algebra.  A global
+homomorphism extending every chamber map exists if and only if
+\[
+ \ker\pi_{\mathrm H}\subseteq\ker\pi_\vartheta.
+\]
+The inclusion is the precise remaining problem.  Exchange and wall relations
+are visible elements of the theta kernel; the missing theorem is that every
+relation forced by exact Hall multiplication is already killed there.
+
+We also prove a recognition theorem for the direct morphism-to-critical
+comparison.  Keller--Yang mutation, Hall scattering diagrams and
+cohomological Donaldson--Thomas theory already provide mutation-covariant
+$3$-Calabi--Yau structures \cite{KellerYang,BridgelandScattering,Davison}.
+What remains is a canonical class attached to a concrete projective
+morphism.  If such an assignment has the correct initial normalization and is
+mutation covariant, then its integration is forced on every reachable rigid
+object to equal $\vartheta_{\Gamma_T(I(f))}$.  The theorem does not construct
+the class, but it reduces the comparison to a local covariance check.
+
+\subsection*{Computation and scope}
+
+For the nonhereditary cluster-tilted algebra
+\[
+ A=\kk Q/(bc,cd,db),
+ \qquad
+ Q:1\longrightarrow2\longrightarrow4\longrightarrow3\longrightarrow2,
+\]
+exact code enumerates the entire paired $A_4$ pattern.  It finds
+\AIVTransferMatrices\ distinct transfer matrices, computes the invariant
+skew lattice, verifies all \AIVOrientedMutations\ labelled wall transitions,
+and solves the full fixed-frozen affine system.  Separate regressions test the
+general formulas in full ranks $2,4,6$ and singular ranks $3,5$.  The code is
+a certificate for the implementation and the finite example; it does not
+replace the general proofs.
+
+No claim is made that incompatible rigid Hall products are closed, that the
+whole exact Hall algebra maps to the quantum cluster algebra, or that a
+framed critical Hall class has been constructed.  The novelty claims are
+therefore deliberately limited to the globalization criterion, its
+symplectic wall form, the fixed-frozen obstruction, the universal kernel
+criterion, and the resulting exact computations.  The manuscript is a
+research draft and does not assert priority beyond the literature search
+recorded in \cref{sec:audit}.

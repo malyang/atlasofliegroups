@@ -1,0 +1,304 @@
+\section{Globalizable Hall quantisations}
+\label{sec:globalization}
+
+We now solve the mutable globalization problem in arbitrary rank.  The result
+is elementary at the level of lattices, but it reorganizes the whole Hall
+construction: the obstruction is the holonomy of the piecewise fan
+transport, not the rank of the initial exchange matrix.
+
+\subsection{The invariant parameter lattice}
+
+\begin{definition}[Globalizable mutable parameter]
+\label{def:globalizable}
+Let $S\in\Skew_n(\mathbb Z)$.  We call $S$ \emph{Hall-globalizable on the
+reachable rigid fan} if there exists an integral skew form
+$\widehat\Lambda_S$ on the term lattice $L=K\oplus K$ such that:
+\begin{enumerate}[label=(\roman*),leftmargin=2.3em]
+\item the contractible lattice $C=\ker D$ is contained in
+      $\rad\widehat\Lambda_S$;
+\item the restriction of $\widehat\Lambda_S$ to the initial
+      $Z$-boundary $K\oplus0$ is $S$;
+\item for every reachable ordered maximal rigid chart $R$,
+      \begin{equation}
+       \Xi_R^T\widehat\Lambda_S\Xi_R=G_R^TSG_R.
+       \label{eq:globalizable-restriction}
+      \end{equation}
+\end{enumerate}
+\end{definition}
+
+Condition (i) means that contractible stabilization is invisible to the target
+quantum form.  It is the same condition that makes the contractible Hall
+classes central after twisting.  Condition (ii) fixes the quantisation
+parameter at the natural morphism seed.  Condition (iii) asks for the exact
+Hall split-product exponent to coincide with the mutable block of the
+principal quantum seed in every chamber.
+
+\begin{lemma}[The quotient-forced term form]
+\label{lem:quotient-forced}
+Let $S\in\Skew_n(\mathbb Z)$.  There is a unique skew form on $L$ which kills
+$C=\ker D$ and restricts to $S$ on $K\oplus0$.  It is
+\begin{equation}
+ \widehat\Lambda_S=D^TSD
+ =\begin{pmatrix}S&-S\\-S&S\end{pmatrix}.
+ \label{eq:global-term-form}
+\end{equation}
+Its radical contains $C$, and
+\begin{equation}
+ \Xi_R^T\widehat\Lambda_S\Xi_R
+ =\Delta_R^TS\Delta_R.
+ \label{eq:term-restriction-Delta}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+A bilinear form which vanishes on $C$ factors uniquely through
+$L/C$.  The split-difference map induces an isomorphism
+\[
+ \overline D:L/C\xrightarrow{\sim}K.
+\]
+On the initial $Z$-boundary, $D(p,0)=-p$, so the quotient form forced by the
+restriction $S$ is again $S$, because $(-I)^TS(-I)=S$.  Pulling it back along
+$D$ gives \cref{eq:global-term-form}.  Finally
+$D\Xi_R=\Delta_R$, hence
+\[
+ \Xi_R^TD^TSD\Xi_R=\Delta_R^TS\Delta_R.
+\]
+\end{proof}
+
+\begin{theorem}[Globalization criterion]
+\label{thm:globalization-criterion}
+For $S\in\Skew_n(\mathbb Z)$, the following are equivalent.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item $S$ is Hall-globalizable in the sense of
+      \cref{def:globalizable}.
+\item For every reachable ordered maximal rigid chart $R$,
+      \begin{equation}
+       \Delta_R^TS\Delta_R=G_R^TSG_R.
+       \label{eq:Delta-G-S}
+      \end{equation}
+\item For every such $R$,
+      \begin{equation}
+       \mathsf L_R^TS\mathsf L_R=S,
+       \qquad \mathsf L_R=G_R\Delta_R^{-1}.
+       \label{eq:transfer-invariance}
+      \end{equation}
+\end{enumerate}
+When these conditions hold, the unique global term form is
+$\widehat\Lambda_S=D^TSD$.
+\end{theorem}
+
+\begin{proof}
+By \cref{lem:quotient-forced}, conditions (i) and (ii) of
+\cref{def:globalizable} force
+$\widehat\Lambda_S=D^TSD$.  Its chamber restriction is
+$\Delta_R^TS\Delta_R$, while the required quantum mutable block is
+$G_R^TSG_R$.  This proves the equivalence of (i) and (ii), including
+uniqueness.
+
+Since $G_R=\mathsf L_R\Delta_R$ and $\Delta_R$ is invertible,
+\[
+ G_R^TSG_R
+ =\Delta_R^T\mathsf L_R^TS\mathsf L_R\Delta_R.
+\]
+Cancelling $\Delta_R^T$ and $\Delta_R$ proves the equivalence of (ii) and
+(iii).
+\end{proof}
+
+\begin{definition}[Transfer group and invariant quantisation lattice]
+\label{def:holonomy}
+Fix an initial chamber $R_0$.  The \emph{presentation-fan transfer group} is
+\[
+ \Hol
+ :=\left\langle
+    \mathsf L_{R_0}^{-1}\mathsf L_R:
+    R\text{ reachable maximal rigid}
+   \right\rangle
+ \subseteq\mathrm{GL}(K).
+\]
+The lattice of globalizable parameters is
+\begin{equation}
+ \Qglob
+ :=\Skew(K)^{\Hol}
+ =\{S\in\Skew_n(\mathbb Z):h^TSh=S\text{ for all }h\in\Hol\}.
+ \label{eq:globalizable-lattice}
+\end{equation}
+\end{definition}
+
+The initial transfer is $-I$ in the conventions of this paper, so it fixes
+every skew form.  Thus one may equivalently require invariance under all
+$\mathsf L_R$ or under the relative generators in \cref{def:holonomy}.
+
+\begin{corollary}[Exact linear computation]
+\label{cor:linear-computation}
+If a finite rigid atlas is known, $\Qglob$ is the integral kernel of the
+linear map
+\[
+ \Skew_n(\mathbb Z)\longrightarrow
+ \bigoplus_R\Skew_n(\mathbb Z),
+ \qquad
+ S\longmapsto(\mathsf L_R^TS\mathsf L_R-S)_R.
+\]
+In particular it is a saturated sublattice of the rational solution space of
+a finite homogeneous integer system.
+\end{corollary}
+
+\begin{proof}
+The equations are integral and homogeneous.  The integral solutions are the
+intersection of the rational kernel with the ambient free lattice
+$\Skew_n(\mathbb Z)$, hence form a saturated sublattice.
+\end{proof}
+
+\subsection{The canonical arbitrary-rank cocycle}
+
+The first consequence is stronger than it may appear: the canonical principal
+quantisation always admits one global Hall twist.
+
+\begin{corollary}[Canonical principal globalization in every rank]
+\label{cor:zero-globalizes}
+The zero parameter $S=0$ belongs to $\Qglob$ for every skew-symmetric
+exchange matrix $B_0$, with no rank hypothesis.  Its global term form and
+Hall cocycle are
+\begin{equation}
+ \widehat\Lambda_0=0,
+ \qquad
+ \Omega_0=-\Lambda_{\MM}.
+ \label{eq:zero-cocycle}
+\end{equation}
+Consequently, for compatible reachable rigid objects $X,Y$,
+\begin{equation}
+ \eps_X\star_{\Omega_0}\eps_Y=\eps_{X\oplus Y}.
+ \label{eq:commutative-rigid-Hall}
+\end{equation}
+This is exactly the multiplication of the mutable cluster variables in the
+canonical principal quantum seed, whose mutable--mutable commutation block is
+zero in every chamber.
+\end{corollary}
+
+\begin{proof}
+Every matrix preserves the zero form, so
+\cref{thm:globalization-criterion} applies.  The total skew form after twisting
+is
+$\Lambda_{\MM}+\Omega_0=0$ on the whole term lattice.  If $X,Y$ are
+compatible, both extension groups vanish and \cref{eq:split-Hall} gives
+\cref{eq:commutative-rigid-Hall}.  Formula
+\cref{eq:canonical-principal-form} has zero mutable--mutable block.
+\end{proof}
+
+\begin{remark}
+The conclusion is not that the canonical principal quantum algebra is
+commutative.  Frozen--mutable and frozen--frozen blocks remain nonzero.  The
+statement concerns the mutable cluster variables lying in a common cluster,
+and the exact Hall subalgebras generated by compatible rigid morphisms.
+\end{remark}
+
+\subsection{Recovery of the full-rank coefficient-free theorem}
+
+\begin{corollary}[Full-rank compatible form]
+\label{cor:full-rank-globalizes}
+Assume
+\begin{equation}
+ B_0^T\Lambda_0=dI_n
+ \label{eq:scalar-compatibility}
+\end{equation}
+for an integral skew form $\Lambda_0$ and $d>0$.  Then $B_0$ is invertible and
+\[
+ \Lambda_0\in\Qglob.
+\]
+Equivalently,
+\begin{equation}
+ \Delta_R^T\Lambda_0\Delta_R
+ =G_R^T\Lambda_0G_R
+ \label{eq:companion-identity}
+\end{equation}
+for every reachable maximal rigid chart $R$.
+\end{corollary}
+
+\begin{proof}
+The product in \cref{eq:scalar-compatibility} has full rank, so $B_0$ is
+invertible.  Mutation preserves rank.  The matrices
+$G_R^T\Lambda_0G_R$ and
+$\Delta_R^T\Lambda_0\Delta_R$ are the transported quantum forms of the
+cluster-tilting object and its suspended companion.  Suspension preserves the
+labelled exchange matrix $B_R$.  Both forms therefore satisfy
+\[
+ B_R^T\Lambda=dI_n.
+\]
+Since $B_R$ is invertible, the compatible form is unique, equal to
+$d(B_R^T)^{-1}$.  This proves \cref{eq:companion-identity}, and
+\cref{thm:globalization-criterion} gives the claim.
+\end{proof}
+
+\subsection{Hall--theta chamber algebras for every globalizable parameter}
+
+Let $S\in\Qglob$.  Define
+\begin{equation}
+ \Omega_S:=D^TSD-\Lambda_{\MM}
+ \label{eq:Omega-S}
+\end{equation}
+and write
+$\Hall_S^\star(\MM)$ for the exact Hall space with product
+$\star_{\Omega_S}$.  The contractible lattice lies in the radical of the
+total target form $D^TSD$, so all $\eps_{K_P}$ are central and may be set
+equal to $1$.
+
+For $m\in\mathbb N^n$, put
+\[
+ F_{R,m}=\bigoplus_i f_i^{m_i}.
+\]
+Let $M_R^S(m)$ be the normalized based quantum monomial in the principal
+quantisation \cref{eq:principal-affine-family}; its mutable commutation form is
+$G_R^TSG_R$.
+
+\begin{theorem}[Globalizable Hall--theta atlas]
+\label{thm:globalizable-Hall-theta}
+Let $S\in\Qglob$.  For every reachable maximal rigid chart $R$, the span
+\[
+ \Hall_{R,S}^\star
+ :=\Span\{\eps_{F_{R,m}}:m\in\mathbb N^n\}
+\]
+is a subalgebra of $\Hall_S^\star(\MM)$ and
+\begin{equation}
+ \eps_{F_{R,m}}\star_{\Omega_S}\eps_{F_{R,n}}
+ =v^{m^TG_R^TSG_Rn}\eps_{F_{R,m+n}}.
+ \label{eq:globalized-chamber-product}
+\end{equation}
+The assignment
+\begin{equation}
+ \Phi_{R,S}:\Hall_{R,S}^\star\xrightarrow{\sim}\mathbb T_{R,S}^{\ge0},
+ \qquad
+ \eps_{F_{R,m}}\longmapsto M_R^S(m)
+ \label{eq:globalized-chamber-map}
+\end{equation}
+is an algebra isomorphism.  These isomorphisms agree on common face
+subalgebras.  Hence
+\[
+ \Phi_S(\eps_X)=\vartheta_{g_T(X)}
+\]
+is multiplicative for every compatible pair of reachable rigid objects,
+with the theta function interpreted in the chosen principal quantisation.
+\end{theorem}
+
+\begin{proof}
+Rigidity gives
+$\Ext^1(F_{R,m},F_{R,n})=0$.  The total exponent of the twisted split Hall
+product is the restriction of $D^TSD$ to the term lifts:
+\[
+ (\Xi_Rm)^TD^TSD(\Xi_Rn)
+ =m^T\Delta_R^TS\Delta_Rn.
+\]
+Because $S\in\Qglob$, \cref{eq:Delta-G-S} turns this into
+$m^TG_R^TSG_Rn$, proving \cref{eq:globalized-chamber-product}.  The based
+quantum torus has the same multiplication, so
+\cref{eq:globalized-chamber-map} is an isomorphism.  On a common face, the
+same rigid objects and the same quantum variables occur; both products are
+restrictions of the respective global products.  Davison--Mandel identify the
+cluster-chamber theta functions with the normalized quantum cluster monomials
+\cite{DavisonMandel}.
+\end{proof}
+
+\begin{remark}[What has been globalized]
+The theorem globalizes the \emph{mutable} quantum commutation form seen by
+compatible rigid morphisms.  It says nothing yet about using one fixed frozen
+lattice for the full principal form.  That stronger problem is solved in
+\cref{sec:principal-obstruction} and has an additional obstruction.
+\end{remark}
