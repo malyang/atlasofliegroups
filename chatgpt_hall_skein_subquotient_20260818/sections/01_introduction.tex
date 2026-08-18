@@ -1,0 +1,210 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Hall-algebra realizations of quantum cluster algebras are strongest when they
+explain both the individual cluster variables and the multiplication of
+arbitrary elements.  For a finite acyclic quiver, Ding--Xu--Zhang construct a
+subquotient of the Hall algebra of morphisms between projectives which realizes
+the principal-coefficient quantum cluster algebra
+\cite{DingXuZhang}.  Fu--Peng--Zhang recover that construction from a bialgebra
+and an integration map and identify the quantum Caldero--Chapoton formula
+\cite{FuPengZhang}.  Those theorems use the hereditary setting in an essential
+way.  The present project asks what survives when the algebra is a
+nonhereditary cluster-tilted algebra.
+
+Let $A$ be finite-dimensional and
+\[
+ \MM=\Mor(\proj A)
+\]
+the exact category of maps between finitely generated projective right
+$A$-modules.  Bautista describes its indecomposable objects, and Li proves that
+its maximal rigid objects are controlled by support $\tau$-tilting pairs
+\cite{Bautista,Li}.  More precisely, the noncontractible indecomposable objects
+have the form
+\[
+ C_M=(P_1^M\longrightarrow P_0^M),
+ \qquad
+ Z_P=(P\longrightarrow0),
+\]
+while $K_P=(P\xrightarrow{1}P)$ is contractible.  Li's correspondence sends a
+support $\tau$-tilting pair $(M,P)$ to
+\[
+ C_M\oplus Z_P\oplus K_A
+\]
+and identifies the maximal-rigid exchange graph with the support
+$\tau$-tilting graph.  Thus the category already contains the correct rigid
+combinatorics beyond the hereditary case.
+
+The preceding iterations of this work separated three layers.
+\begin{enumerate}[label=(\roman*),leftmargin=2.3em]
+\item The complete homology pair of a projective morphism reconstructs its
+      reduced two-term object and its split index.
+\item On reachable rigid objects, that information reconstructs the classical
+      cluster character, the quantum seed and the quantum theta label.
+\item The ordinary exact Hall integration exists for $\MM$, but its lattice
+      exponent remembers only the two projective terms and forgets the
+      differential.  A global bicharacter twist corrects the multiplication on
+      every rigid compatibility cone.
+\end{enumerate}
+The third point leaves a sharp obstruction.  If $X$ and $Y$ are compatible,
+then $\Ext^1(X,Y)=\Ext^1(Y,X)=0$ and their Hall product is a normalized direct
+sum.  The corrected Hall product therefore agrees with the based product of
+the corresponding quantum cluster monomials.  If $X$ and $Y$ are
+incompatible, the Hall product contains non-split extensions, often with
+non-rigid middle terms.  The union of the rigid chamber algebras is not closed,
+and an object-level theta assignment is not yet an algebra homomorphism.
+
+This paper resolves that last layer for cluster-tilted algebras of Dynkin type
+$A$.  The restriction is mathematically substantial.  In type $A_n$, the
+cluster category has the convex $(n+3)$-gon model: indecomposable objects are
+diagonals, compatibility is non-crossing, and exchange triangles are the two
+smoothings of a crossing.  The associated cluster-tilted algebras are gentle,
+and extensions of string modules are described geometrically by smoothing
+crossings \cite{CanakciSchroll}.  On the quantum side, the localized skein
+algebra of an unpunctured marked surface is a quantum cluster algebra
+\cite{Muller}; coefficient systems can be incorporated by walled skein
+algebras \cite{IshibashiKanoYuasa}, and the recent stated-skein theorem proves
+the equality with the frozen-localized quantum cluster and upper cluster
+algebras for polygons, together with the theta-basis identification
+\cite{CaoHuangWang}.
+
+\subsection*{The Hall--skein ideal}
+
+Fix a triangulation $T$ of the polygon $P=P_{n+3}$ and the corresponding
+cluster-tilted algebra $A$.  Work over the coefficient field
+$\mathbb Q(\omega)$, with $q$ specialized to the prescribed power of
+$\omega$.  Starting with the exact Hall algebra of $\MM$, we perform the same
+three operations already isolated in the earlier paper:
+\begin{enumerate}[label=(\alph*),leftmargin=2.3em]
+\item localize at the contractible classes $[K_P]$;
+\item apply the Hall-compatible term-lattice bicharacter twist;
+\item centrally specialize contractible directions to the frozen boundary
+      monomials of the chosen coefficient system.
+\end{enumerate}
+The resulting algebra is denoted $\Hred$.  In type $A$, every indecomposable
+reduced object is rigid and corresponds to one polygon diagonal.  Since the
+category is representation-finite, the usual triangular Hall argument shows
+that these indecomposable classes generate all of $\Hred$.
+
+For every ordered crossing pair $\gamma,\delta$, the quantum skein algebra has
+a local relation
+\begin{equation}
+ s_\gamma s_\delta
+ =\omega^{a(\gamma,\delta)}s_{\gamma\#_0\delta}
+  +\omega^{b(\gamma,\delta)}s_{\gamma\#_\infty\delta}.
+ \label{eq:intro-skein}
+\end{equation}
+Here each smoothing is a two-component multicurve, and a boundary component is
+an invertible frozen variable.  We impose the same relation on the
+corresponding Hall generators and let $\Jsk$ be the generated two-sided ideal.
+Our main theorem states
+\begin{equation}
+ \boxed{
+  \Hred/\Jsk
+  \;\xrightarrow{\sim}\;
+  \Skein_\omega^{\rm fr}(P)
+  \;\xrightarrow{\sim}\;
+  \Aq.
+ }
+ \label{eq:intro-main}
+\end{equation}
+This is a genuine subquotient realization of the whole quantum cluster
+algebra.  The source is obtained from the entire exact Hall algebra, not from
+a vector space spanned only by rigid objects.  In particular, arbitrary Hall
+products are defined before quotienting, and the quotient assigns a quantum
+cluster element to every non-rigid middle term.
+
+\subsection*{Why the quotient is not tautological}
+
+One could always define an ideal as the kernel of a desired map.  That is not
+what is done here.  The ideal $\Jsk$ is given explicitly by the local crossing
+relations \eqref{eq:intro-skein}.  The proof that no further relations are
+needed uses the crossing filtration.
+
+For a reduced object $M$, let $\crs(M)$ be the number of crossings in the
+multidiagonal formed by its Krull--Schmidt summands.  The split middle term in
+an ordered Hall product is the unique term of maximal crossing number.  By the
+extension--smoothing theorem, every non-split middle term has strictly smaller
+crossing number.  Hence a Hall--skein defect has an invertible leading
+coefficient times the crossing direct sum.  It may therefore be oriented as a
+reduction of one crossing basis vector to lower-crossing basis vectors.
+
+The remaining issue is confluence.  We prove a filtered Diamond lemma.  A
+critical ambiguity is a multidiagonal with two possible crossings to resolve.
+The difference of the two reductions is a lower-crossing element of the same
+Hall--skein ideal.  Induction reduces it to zero; geometrically this is the
+usual local confluence of polygon skein smoothing, and algebraically it uses
+the associativity of the Hall product.  Thus the irreducible classes are
+precisely the non-crossing multidiagonals.  Muller's skein basis theorem shows
+that the same set is a basis of the localized polygon skein algebra, so the
+surjection in \eqref{eq:intro-main} is injective.
+
+\subsection*{Non-rigid middle terms}
+
+The quotient provides an explicit answer to the question which motivated the
+present iteration.  Let $M$ be any Hall basis object.  If $M$ is non-rigid,
+choose a crossing pair among its indecomposable summands.  Expand the actual
+Hall product of that pair, solve for the split direct-sum term, and replace the
+product by the two skein smoothings.  All remaining Hall middle terms have
+smaller crossing number.  Repeating the procedure gives a finite expression
+\begin{equation}
+ \St_{\mathrm H}(M)
+ =\sum_{R\text{ non-crossing}}
+    c_{M,R}(\omega)\,\eps_R.
+ \label{eq:intro-straightening}
+\end{equation}
+The Diamond lemma makes the answer independent of all choices.  Under
+\eqref{eq:intro-main}, $\eps_R$ is the normalized quantum cluster monomial and,
+equivalently, the theta function $\Theta_{g(R)}$.  Therefore every non-rigid
+middle term obtains the canonical theta expansion
+\[
+ \Phi_{\rm sk}(\eps_M)
+ =\sum_R c_{M,R}(\omega)\Theta_{g(R)}.
+\]
+No positivity claim is made for the Hall-corrected coefficients
+$c_{M,R}(\omega)$; the theorem is an algebraic realization and a normal-form
+statement.
+
+For arbitrary $x,y\in\Hred$, including incompatible rigid generators, the
+quotient homomorphism satisfies
+\[
+ \Phi_{\rm sk}(x\star y)
+ =\Phi_{\rm sk}(x)\Phi_{\rm sk}(y).
+\]
+Thus the Hall structure constants of every incompatible product are converted
+into quantum/theta structure constants after the explicit skein quotient.
+This is the type-$A$ analogue of the global subquotient phenomenon of
+Ding--Xu--Zhang and Fu--Peng--Zhang.
+
+\subsection*{Scope and relation to existing multiplication formulas}
+
+Caldero--Keller realize a finite-type cluster algebra as an exceptional Hall
+algebra of its cluster category \cite{CalderoKeller}; Palu proves cluster
+multiplication formulas for arbitrary objects in suitable $2$-Calabi--Yau
+categories \cite{PaluMultiplication}.  Weighted quantum and motivic refinements
+for arbitrary pairs are developed by Chen--Xiao--Xu and
+Xiao--Xu--Yang \cite{ChenXiaoXu,XiaoXuYang}.  These results supply the
+$2$-Calabi--Yau multiplication background.  Our construction has a different
+source and conclusion: it starts from the exact Hall algebra of projective
+morphisms over a nonhereditary cluster-tilted algebra and gives an explicit
+local ideal whose quotient is the quantum cluster algebra.
+
+The theorem is not claimed for every Jacobi-finite cluster-tilted algebra.
+Outside the polygon and related surface models, an explicit skein presentation
+for all non-rigid objects is unavailable, and the literature explicitly notes
+that a general quantum Laurent expansion for arbitrary $2$-Calabi--Yau
+objects is not known \cite{XiaoXuYang}.  The final section isolates the exact
+input needed for a future generalization: a terminating and confluent
+extension-straightening system whose standard classes are the theta basis.
+
+\subsection*{Organization}
+
+\Cref{sec:prior} recalls the morphism-category and Hall framework.
+\Cref{sec:skein} fixes the polygon skein algebra and coefficients.
+\Cref{sec:crossing} proves the crossing-filtration and Diamond-lemma results.
+\Cref{sec:subquotient} proves the global subquotient theorem.
+\Cref{sec:nonrigid} gives the non-rigid theta straightening algorithm.
+\Cref{sec:A4} records the complete type-$A_4$ certificate.
+\Cref{sec:audit} separates direct proofs, imported theorems and remaining
+questions, and \cref{sec:reproduction} describes the code and reproducibility
+package.
